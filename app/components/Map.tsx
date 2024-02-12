@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import mapboxgl, { GeoJSONSource } from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
-import { SpotsProps } from "../data/schema";
-import React from "react";
+import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import { SpotsProps } from '../data/schema';
+import React from 'react';
 
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 
-const INITIAL_LNG = -0.116773;
-const INITIAL_LAT = 51.510357;
-const INITIAL_ZOOM = 12;
+const INITIAL_LNG = 115.092;
+const INITIAL_LAT = -8.3405;
+const INITIAL_ZOOM = 7.5; // Adjust based on your needs
 
 mapboxgl.accessToken = ACCESS_TOKEN;
 
@@ -21,8 +21,7 @@ interface MapContextValue {
 
 const MapContext = React.createContext<MapContextValue>({});
 
-export const useMapContext = (): MapContextValue =>
-  React.useContext(MapContext);
+export const useMapContext = (): MapContextValue => React.useContext(MapContext);
 
 export const MapProvider: React.FC<{
   locations: SpotsProps;
@@ -40,13 +39,13 @@ export const MapProvider: React.FC<{
     if (map.current) return;
     map.current = new mapboxgl.Map({
       container: mapContainer.current!,
-      style: "mapbox://styles/andybrooker/clk07xwig00a301pkc0qibu3q",
+      style: 'mapbox://styles/mapbox/streets-v12',
       center: [lng, lat],
       zoom: zoom,
     });
-    map.current.on("load", () => {
-      map.current?.addSource("locations", {
-        type: "geojson",
+    map.current.on('load', () => {
+      map.current?.addSource('locations', {
+        type: 'geojson',
         data: locations,
       });
     });
@@ -61,11 +60,11 @@ export const MapProvider: React.FC<{
 
     // Add new markers
     for (const feature of locations.features) {
-      const el = document.createElement("div");
+      const el = document.createElement('div');
       // Tailwind Classname
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
-      el.setAttribute("data-marker", feature.properties.venue);
-      el.addEventListener("click", () => {
+      el.setAttribute('data-marker', feature.properties.venue);
+      el.addEventListener('click', () => {
         map.current?.flyTo({
           center: feature.geometry.coordinates,
           zoom: 15,
@@ -98,7 +97,7 @@ export const MapProvider: React.FC<{
 
   React.useEffect(() => {
     if (!map.current) return;
-    const source = map.current?.getSource("locations") as GeoJSONSource;
+    const source = map.current?.getSource('locations') as GeoJSONSource;
     if (source) {
       source.setData(locations);
     }
@@ -106,18 +105,14 @@ export const MapProvider: React.FC<{
 
   React.useEffect(() => {
     if (!map.current) return; // wait for map to initialize
-    map.current.on("move", () => {
+    map.current.on('move', () => {
       setLng(Number(map.current?.getCenter().lng.toFixed(4)));
       setLat(Number(map.current?.getCenter().lat.toFixed(4)));
       setZoom(Number(map.current?.getZoom().toFixed(2)));
     });
   });
 
-  return (
-    <MapContext.Provider value={{ map, mapContainer, markers }}>
-      {children}
-    </MapContext.Provider>
-  );
+  return <MapContext.Provider value={{ map, mapContainer, markers }}>{children}</MapContext.Provider>;
 };
 
 export const Map = () => {
