@@ -1,15 +1,14 @@
 'use client';
-
-import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
+import React from 'react';
+import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { SpotsProps } from '../data/schema';
-import React from 'react';
 
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 
 const INITIAL_LNG = 115.092;
 const INITIAL_LAT = -8.3405;
-const INITIAL_ZOOM = 7.5; // Adjust based on your needs
+const INITIAL_ZOOM = 7.5;
 
 mapboxgl.accessToken = ACCESS_TOKEN;
 
@@ -35,24 +34,66 @@ export const MapProvider: React.FC<{
   const [zoom, setZoom] = React.useState(INITIAL_ZOOM);
 
   React.useEffect(() => {
-    if (!mapContainer.current) return;
-    if (map.current) return;
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current!,
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [lng, lat],
-      zoom: zoom,
-    });
-  }, [lat, lng, locations, map, zoom]);
+    if (mapContainer.current && !map.current) {
+      // Ensure this runs once and the map container is available
+      const initMap = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: 'mapbox://styles/space-waves/clsk3h19n00c201qu5gzz78n9', // Consider changing to satellite-v9 if needed
+        center: [lng, lat],
+        zoom: zoom,
+      });
 
-  React.useEffect(() => {
-    if (!map.current) return; // wait for map to initialize
-    map.current.on('move', () => {
-      setLng(Number(map.current?.getCenter().lng.toFixed(4)));
-      setLat(Number(map.current?.getCenter().lat.toFixed(4)));
-      setZoom(Number(map.current?.getZoom().toFixed(2)));
-    });
-  });
+      // initMap.on('load', () => {
+      //   initMap.addSource('earthquakes', {
+      //     type: 'geojson',
+      //     data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
+      //   });
+
+      //   initMap.addLayer({
+      //     id: 'earthquakes-layer',
+      //     type: 'circle',
+      //     source: 'earthquakes',
+      //     paint: {
+      //       'circle-radius': 4,
+      //       'circle-stroke-width': 2,
+      //       'circle-color': 'blue',
+      //       'circle-stroke-color': 'white',
+      //     },
+      //   });
+      //   // // Assuming 'username.abcdefgh' is your tileset ID
+      //   // initMap.addSource('trackData', {
+      //   //   type: 'vector',
+      //   //   url: 'mapbox://space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2', // Replace 'username.abcdefgh' with your actual Tileset ID
+      //   // });
+
+      //   // //api.mapbox.com/tilesets/v1/sources/space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2
+      //   // // Add a layer to visualize the track
+      //   // https: initMap.addLayer({
+      //   //   id: 'trackLayer',
+      //   //   type: 'line',
+      //   //   source: 'trackData',
+      //   //   'source-layer': 'yourLayerName', // Replace 'yourLayerName' with the actual name of the layer in your tileset
+      //   //   // paint: {
+      //   //   //   // Example style properties, adjust as needed
+      //   //   //   'line-color': '#0000FF', // Mimic 'stroke' property
+      //   //   //   'line-opacity': 1, // Mimic 'stroke_opacity' property
+      //   //   //   'line-width': 22.67716535433071, // Mimic 'stroke_width' property
+      //   //   // },
+      //   // });
+      // });
+
+      //   map.current = initMap; // Set the ref to the newly created map
+    }
+  }, [lat, lng, zoom]); // Depend on lat, lng, and zoom if these should cause the map to reinitialize
+
+  // React.useEffect(() => {
+  //   if (!map.current) return;
+  //   map.current.on('move', () => {
+  //     setLng(Number(map.current?.getCenter().lng.toFixed(4)));
+  //     setLat(Number(map.current?.getCenter().lat.toFixed(4)));
+  //     setZoom(Number(map.current?.getZoom().toFixed(2)));
+  //   });
+  // }, [map]);
 
   return <MapContext.Provider value={{ map, mapContainer, markers }}>{children}</MapContext.Provider>;
 };
