@@ -43,65 +43,7 @@ export const MapProvider: React.FC<{
       center: [lng, lat],
       zoom: zoom,
     });
-    map.current.on('load', () => {
-      map.current?.addSource('locations', {
-        type: 'geojson',
-        data: locations,
-      });
-    });
   }, [lat, lng, locations, map, zoom]);
-
-  React.useEffect(() => {
-    if (!map.current) return;
-
-    // Remove old markers
-    markers.current.forEach((marker) => marker.remove());
-    markers.current = [];
-
-    // Add new markers
-    for (const feature of locations.features) {
-      const el = document.createElement('div');
-      // Tailwind Classname
-      el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
-      el.setAttribute('data-marker', feature.properties.venue);
-      el.addEventListener('click', () => {
-        map.current?.flyTo({
-          center: feature.geometry.coordinates,
-          zoom: 15,
-        });
-      });
-
-      const popup = new mapboxgl.Popup({
-        offset: 16,
-        closeOnClick: false,
-        focusAfterOpen: false,
-      })
-        .setLngLat(feature.geometry.coordinates)
-        .setHTML(
-          `
-                <div class="name tracking-tighter">${feature.properties.name}</div>
-                <div class="text-gray-10 tracking-tighter">
-                  ${feature.properties.area}, ${feature.properties.postcode}
-                </div>
-        `
-        );
-
-      const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
-        .setLngLat(feature.geometry.coordinates)
-        .setPopup(popup)
-        .addTo(map.current);
-
-      markers.current.push(marker);
-    }
-  }, [locations]);
-
-  React.useEffect(() => {
-    if (!map.current) return;
-    const source = map.current?.getSource('locations') as GeoJSONSource;
-    if (source) {
-      source.setData(locations);
-    }
-  }, [locations, map]);
 
   React.useEffect(() => {
     if (!map.current) return; // wait for map to initialize
@@ -120,7 +62,10 @@ export const Map = () => {
 
   return (
     <div className="absolute inset-0">
-      <div ref={mapContainer} className="h-screen w-screen" />
+      <div
+        ref={mapContainer}
+        className="h-screen w-screen"
+      />
     </div>
   );
 };

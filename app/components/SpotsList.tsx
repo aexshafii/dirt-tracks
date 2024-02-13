@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { SpotProps, SpotsProps } from "../data/schema";
-import { useMapContext } from "./Map";
-import { Chip } from "./Chip";
-import mapboxgl from "mapbox-gl";
-import { Inter } from "next/font/google";
-import { BottomSheetRef } from "react-spring-bottom-sheet";
+import { SpotProps, SpotsProps } from '../data/schema';
+import { useMapContext } from './Map';
+import { Chip } from './Chip';
+import mapboxgl from 'mapbox-gl';
+import { Inter } from 'next/font/google';
+import { BottomSheetRef } from 'react-spring-bottom-sheet';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 type Geometry = {
-  type: "Point";
+  type: 'Point';
   coordinates: [number, number];
 };
 
 type Feature = {
-  type: "Feature";
+  type: 'Feature';
   properties: {
     id: number;
     name: string;
     area: string;
     postcode: string;
-    venue: "pub" | "coffee" | "restaurant" | "bakery";
+    venue: 'pub' | 'coffee' | 'restaurant' | 'bakery';
   };
   geometry: Geometry;
 };
@@ -53,9 +53,7 @@ export const SpotsList = ({
         marker.getLngLat().lat === feature.geometry.coordinates[1]
     );
 
-    markers?.current
-      ?.filter((m) => m !== marker)
-      .map((m) => m?.getPopup()?.remove());
+    markers?.current?.filter((m) => m !== marker).map((m) => m?.getPopup()?.remove());
 
     if (marker) {
       const popup = marker.getPopup();
@@ -75,7 +73,7 @@ export const SpotsList = ({
 
   return (
     <>
-      {locations.features.map((feature) => (
+      {/* {locations.features.map((feature) => (
         <Spot
           handleClick={() => handleClick(feature)}
           key={feature.properties.id}
@@ -85,7 +83,7 @@ export const SpotsList = ({
           postcode={feature.properties.postcode}
           area={feature.properties.area}
         />
-      ))}
+      ))} */}
     </>
   );
 };
@@ -94,14 +92,7 @@ interface ExtendedSpotProps extends SpotProps {
   handleClick: () => void;
 }
 
-export const Spot = ({
-  id,
-  name,
-  area,
-  postcode,
-  venue,
-  handleClick,
-}: ExtendedSpotProps) => {
+export const Spot = ({ id, name, area, postcode, venue, handleClick }: ExtendedSpotProps) => {
   return (
     <div
       onClick={handleClick}
