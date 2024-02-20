@@ -1,9 +1,11 @@
 'use client';
-import React from 'react';
-import mapboxgl from 'mapbox-gl';
+
+import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { SpotsProps } from '../data/schema';
-
+import React from 'react';
+// Alternatively you can import the whole lot using
+import * as turf from '@turf/turf';
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 
 const INITIAL_LNG = 115.092;
@@ -34,66 +36,78 @@ export const MapProvider: React.FC<{
   const [zoom, setZoom] = React.useState(INITIAL_ZOOM);
 
   React.useEffect(() => {
-    if (mapContainer.current && !map.current) {
-      // Ensure this runs once and the map container is available
-      const initMap = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/space-waves/clsk3h19n00c201qu5gzz78n9', // Consider changing to satellite-v9 if needed
-        center: [lng, lat],
-        zoom: zoom,
+    if (!mapContainer.current) return;
+    if (map.current) return;
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current!,
+      style: 'mapbox://styles/space-waves/clsk3h19n00c201qu5gzz78n9', // Consider changing to satellite-v9 if needed
+      center: [lng, lat],
+      zoom: zoom,
+    });
+    map.current.on('load', () => {
+      map.current?.addSource('locations', {
+        type: 'geojson',
+        data: locations,
+      });
+    });
+  }, [lat, lng, locations, map, zoom]);
+
+  React.useEffect(() => {
+    if (!map.current) return;
+
+    // Remove old markers
+    markers.current.forEach((marker) => marker.remove());
+    markers.current = [];
+
+    // Add new markers
+    for (const feature of locations.features) {
+      const el = document.createElement('div');
+      // Tailwind Classname
+      el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
+      el.setAttribute('data-marker', feature.properties.venue);
+      el.addEventListener('click', () => {
+        map.current?.flyTo({
+          center: feature.geometry.coordinates,
+          zoom: 15,
+        });
       });
 
-      // initMap.on('load', () => {
-      //   initMap.addSource('earthquakes', {
-      //     type: 'geojson',
-      //     data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
-      //   });
+      const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: false })
+        .setLngLat(feature.geometry.coordinates)
+        .setHTML(
+          `
+                <div class="name tracking-tighter">${feature.properties.name}</div>
+                <div class="text-gray-10 tracking-tighter">
+                  ${feature.properties.area} 
+                </div>
+        `
+        );
 
-      //   initMap.addLayer({
-      //     id: 'earthquakes-layer',
-      //     type: 'circle',
-      //     source: 'earthquakes',
-      //     paint: {
-      //       'circle-radius': 4,
-      //       'circle-stroke-width': 2,
-      //       'circle-color': 'blue',
-      //       'circle-stroke-color': 'white',
-      //     },
-      //   });
-      //   // // Assuming 'username.abcdefgh' is your tileset ID
-      //   // initMap.addSource('trackData', {
-      //   //   type: 'vector',
-      //   //   url: 'mapbox://space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2', // Replace 'username.abcdefgh' with your actual Tileset ID
-      //   // });
+      const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
+        .setLngLat(feature.geometry.coordinates)
+        .setPopup(popup)
+        .addTo(map.current);
 
-      //   // //api.mapbox.com/tilesets/v1/sources/space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2
-      //   // // Add a layer to visualize the track
-      //   // https: initMap.addLayer({
-      //   //   id: 'trackLayer',
-      //   //   type: 'line',
-      //   //   source: 'trackData',
-      //   //   'source-layer': 'yourLayerName', // Replace 'yourLayerName' with the actual name of the layer in your tileset
-      //   //   // paint: {
-      //   //   //   // Example style properties, adjust as needed
-      //   //   //   'line-color': '#0000FF', // Mimic 'stroke' property
-      //   //   //   'line-opacity': 1, // Mimic 'stroke_opacity' property
-      //   //   //   'line-width': 22.67716535433071, // Mimic 'stroke_width' property
-      //   //   // },
-      //   // });
-      // });
-
-      //   map.current = initMap; // Set the ref to the newly created map
+      markers.current.push(marker);
     }
-  }, [lat, lng, zoom]); // Depend on lat, lng, and zoom if these should cause the map to reinitialize
+  }, [locations]);
 
-  // React.useEffect(() => {
-  //   if (!map.current) return;
-  //   map.current.on('move', () => {
-  //     setLng(Number(map.current?.getCenter().lng.toFixed(4)));
-  //     setLat(Number(map.current?.getCenter().lat.toFixed(4)));
-  //     setZoom(Number(map.current?.getZoom().toFixed(2)));
-  //   });
-  // }, [map]);
+  React.useEffect(() => {
+    if (!map.current) return;
+    const source = map.current?.getSource('locations') as GeoJSONSource;
+    if (source) {
+      source.setData(locations);
+    }
+  }, [locations, map]);
+
+  React.useEffect(() => {
+    if (!map.current) return; // wait for map to initialize
+    map.current.on('move', () => {
+      setLng(Number(map.current?.getCenter().lng.toFixed(4)));
+      setLat(Number(map.current?.getCenter().lat.toFixed(4)));
+      setZoom(Number(map.current?.getZoom().toFixed(2)));
+    });
+  });
 
   return <MapContext.Provider value={{ map, mapContainer, markers }}>{children}</MapContext.Provider>;
 };

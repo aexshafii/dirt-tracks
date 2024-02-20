@@ -47,13 +47,13 @@ export default async function Home({
     <MapProvider locations={spots}>
       <div className="flex h-full">
         <div className="absolute py-8 px-6 sm:px-9 sm:py-9 z-20 drop-shadow-xl">{/* <Logo /> */}</div>
-        {/* <div className="hidden sm:block fade max-w-sm p-9 w-full h-screen max-h-screen z-10 overflow-scroll -scale-x-100">
+        <div className="hidden sm:block fade max-w-sm p-9 w-full h-screen max-h-screen z-10 overflow-scroll -scale-x-100">
           <div className="flex gap-9 flex-col -scale-x-100">
             <div className="flex flex-col gap-3 h-full z-10 pt-16 pb-8">
               <SpotsList locations={spots} />
             </div>
           </div>
-        </div> */}
+        </div>
 
         <div className="hidden sm:flex p-9 gap-2.5 w-full justify-end h-fit z-10">
           {/* <FilterDropdown
