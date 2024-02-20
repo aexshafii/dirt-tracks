@@ -7,7 +7,7 @@ const propertySchema = z.object({
   id: z.number(),
   name: z.string(),
   area: z.string(),
-  //postcode: z.string(),
+  length: z.string(),
   venue: z.enum(venues),
 });
 

@@ -6,7 +6,8 @@ import { Chip } from './Chip';
 import mapboxgl from 'mapbox-gl';
 import { Inter } from 'next/font/google';
 import { BottomSheetRef } from 'react-spring-bottom-sheet';
-
+import * as turf from '@turf/turf';
+import React from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 type Geometry = {
@@ -20,7 +21,7 @@ type Feature = {
     id: number;
     name: string;
     area: string;
-    postcode?: string;
+    length?: string;
     venue: 'mixed track' | 'coffee' | 'restaurant' | 'bakery';
   };
   geometry: Geometry;
@@ -71,6 +72,29 @@ export const SpotsList = ({
     togglePopup(feature);
   };
 
+  // async function getData() {
+  //   const res = await fetch(
+  //     'https://api.mapbox.com/datasets/v1/space-waves/clsini8fa195j1tpcsrhudsf4/features?access_token=pk.eyJ1Ijoic3BhY2Utd2F2ZXMiLCJhIjoiY2xzaWprNnFyMWV6bDJ2cjI2Z3k3cWJjeiJ9.CFoO_J41AuEvImG63SkUpg'
+  //   );
+  //   if (!res.ok) {
+  //     throw new Error('Failed to fetch data');
+  //   }
+  //   return res.json();
+  // }
+  // React.useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = await getData();
+  //     console.log(data.features[0].geometry.coordinates);
+  //     const coordinates = data.features[0].geometry.coordinates;
+  //     var line = turf.lineString(coordinates);
+  //     var length = turf.length(line, { units: 'kilometers' });
+  //     // Do something with the data
+  //     console.log(length);
+  //     return length;
+  //   };
+
+  //   fetchData();
+  // }, []);
   return (
     <>
       {locations.features.map((feature) => (
@@ -80,7 +104,7 @@ export const SpotsList = ({
           id={feature.properties.id}
           name={feature.properties.name}
           venue={feature.properties.venue}
-          //postcode={feature.properties.postcode}
+          length={feature.properties.length}
           area={feature.properties.area}
         />
       ))}
@@ -92,7 +116,7 @@ interface ExtendedSpotProps extends SpotProps {
   handleClick: () => void;
 }
 
-export const Spot = ({ id, name, area, venue, handleClick }: ExtendedSpotProps) => {
+export const Spot = ({ id, name, area, length, venue, handleClick }: ExtendedSpotProps) => {
   return (
     <div
       onClick={handleClick}
@@ -100,7 +124,9 @@ export const Spot = ({ id, name, area, venue, handleClick }: ExtendedSpotProps) 
     >
       <div className="tracking-tighter font-[450]">
         <div>{name}</div>
-        <div className="text-gray-10">{area}</div>
+        <div className="text-gray-10">
+          {area}, {length}
+        </div>
       </div>
       <Chip venue={venue} />
     </div>

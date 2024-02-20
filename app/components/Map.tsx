@@ -4,7 +4,8 @@ import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { SpotsProps } from '../data/schema';
 import React from 'react';
-
+// Alternatively you can import the whole lot using
+import * as turf from '@turf/turf';
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 
 const INITIAL_LNG = 115.092;
