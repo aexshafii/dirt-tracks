@@ -3,11 +3,9 @@
 import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { SpotsProps } from '../data/schema';
-import React from 'react';
-// Alternatively you can import the whole lot using
+import React, { useEffect, useState } from 'react';
 import * as turf from '@turf/turf';
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
-
 const INITIAL_LNG = 115.092;
 const INITIAL_LAT = -8.3405;
 const INITIAL_ZOOM = 7.5;
@@ -38,20 +36,49 @@ export const MapProvider: React.FC<{
   React.useEffect(() => {
     if (!mapContainer.current) return;
     if (map.current) return;
-    map.current = new mapboxgl.Map({
+    const initMap = new mapboxgl.Map({
       container: mapContainer.current!,
       style: 'mapbox://styles/space-waves/clsk3h19n00c201qu5gzz78n9', // Consider changing to satellite-v9 if needed
       center: [lng, lat],
       zoom: zoom,
     });
-    map.current.on('load', () => {
+    initMap.on('load', () => {
       map.current?.addSource('locations', {
         type: 'geojson',
         data: locations,
       });
+
+      // Additional earthquake layer
+      initMap.addSource('earthquakes', {
+        type: 'geojson',
+        data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
+      });
+
+      initMap.addLayer({
+        id: 'earthquakes-layer',
+        type: 'circle',
+        source: 'earthquakes',
+        paint: {
+          'circle-radius': 4,
+          'circle-stroke-width': 2,
+          'circle-color': 'red',
+          'circle-stroke-color': 'white',
+        },
+      });
     });
+
+    map.current = initMap; // Set the ref to the newly created map
   }, [lat, lng, locations, map, zoom]);
 
+  React.useEffect(() => {
+    const fetchDataSetList = async () => {
+      const res = await fetch(`/api/mapbox-data`);
+      const data = await res.json();
+      console.log(data);
+      return data;
+    };
+    fetchDataSetList();
+  }, []);
   React.useEffect(() => {
     if (!map.current) return;
 
