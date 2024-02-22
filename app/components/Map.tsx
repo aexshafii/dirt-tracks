@@ -70,14 +70,36 @@ export const MapProvider: React.FC<{
     map.current = initMap; // Set the ref to the newly created map
   }, [lat, lng, locations, map, zoom]);
 
+  interface Dataset {
+    bounds: [number, number, number, number];
+    created: string;
+    description: string | null;
+    features: number;
+    id: string;
+    modified: string;
+    name: string;
+    owner: string;
+    size: number;
+  }
+
   React.useEffect(() => {
-    const fetchDataSetList = async () => {
+    const fetchDataSets = async () => {
       const res = await fetch(`/api/mapbox-data`);
       const data = await res.json();
       console.log(data);
+      // create an array of dataset ids
+      const dataSetIds = data.map((dataset: Dataset) => dataset.id);
+      dataSetIds.forEach((datasetId: string) => {
+        fetch(`https://api.mapbox.com/datasets/v1/space-waves/${datasetId}/features?access_token=${ACCESS_TOKEN}`)
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+          });
+      });
+
       return data;
     };
-    fetchDataSetList();
+    fetchDataSets();
   }, []);
   React.useEffect(() => {
     if (!map.current) return;
