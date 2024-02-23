@@ -120,55 +120,14 @@
         "coordinates": [115.367447, -8.569754]
       },
       "properties": {
-        "id": 6,
+        "id": 9,
         "name": "Klungkung",
         "area": "Banjar Siyut",
         "length": "20.73 km",
         "type": "mixed track"
       }
     },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [115.364766, -8.282558]
-      },
-      "properties": {
-        "id": 7,
-        "name": "Batur - Tianyar Beach - Savanna",
-        "area": "Besakih",
-        "length": "83.03 km",
-        "type": "mixed track"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [115.364766, -8.282558]
-      },
-      "properties": {
-        "id": 8,
-        "name": "Batur - Tianyar Beach - Savanna",
-        "area": "Besakih",
-        "length": "83.03 km",
-        "type": "mixed track"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [115.364766, -8.282558]
-      },
-      "properties": {
-        "id": 9,
-        "name": "Batur - Tianyar Beach - Savanna",
-        "area": "Besakih",
-        "length": "83.03 km",
-        "type": "mixed track"
-      }
-    },
+
     {
       "type": "Feature",
       "geometry": {
