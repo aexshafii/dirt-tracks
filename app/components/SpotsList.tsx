@@ -22,7 +22,7 @@ type Feature = {
     name: string;
     area: string;
     length?: string;
-    venue: 'mixed track' | 'coffee' | 'restaurant' | 'bakery';
+    type: 'mixed track' | 'dirt track';
   };
   geometry: Geometry;
 };
@@ -103,7 +103,7 @@ export const SpotsList = ({
           key={feature.properties.id}
           id={feature.properties.id}
           name={feature.properties.name}
-          venue={feature.properties.venue}
+          type={feature.properties.type}
           length={feature.properties.length}
           area={feature.properties.area}
         />
@@ -116,7 +116,7 @@ interface ExtendedSpotProps extends SpotProps {
   handleClick: () => void;
 }
 
-export const Spot = ({ id, name, area, length, venue, handleClick }: ExtendedSpotProps) => {
+export const Spot = ({ id, name, area, length, type, handleClick }: ExtendedSpotProps) => {
   return (
     <div
       onClick={handleClick}
@@ -125,10 +125,10 @@ export const Spot = ({ id, name, area, length, venue, handleClick }: ExtendedSpo
       <div className="tracking-tighter font-[450]">
         <div>{name}</div>
         <div className="text-gray-10">
-          {area}, {length}
+          {area} - {length}
         </div>
       </div>
-      <Chip venue={venue} />
+      <Chip type={type} />
     </div>
   );
 };

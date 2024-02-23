@@ -12,7 +12,175 @@
         "name": "Besakih Speed Track",
         "area": "Besakih",
         "length": "33.9km",
-        "venue": "mixed track"
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.364766, -8.282558]
+      },
+      "properties": {
+        "id": 2,
+        "name": "Batur - Tianyar Beach - Savanna",
+        "area": "Besakih",
+        "length": "83.03 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.384585, -8.280302]
+      },
+      "properties": {
+        "id": 3,
+        "name": "Batur Outer Rim",
+        "area": "Besakih",
+        "length": "37.94 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.40613, -8.28645]
+      },
+      "properties": {
+        "id": 4,
+        "name": "Bangli Off Road Loop",
+        "area": "Besakih",
+        "length": "13.79 km",
+        "type": "dirt track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.28263, -8.36939]
+      },
+      "properties": {
+        "id": 5,
+        "name": "Taro Loop",
+        "area": "Giyanyar",
+        "length": "5.83 km",
+        "type": "dirt track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.09808, -8.61844]
+      },
+      "properties": {
+        "id": 6,
+        "name": "Pantai Nyanyi",
+        "area": "Tabanan",
+        "length": "4.47 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.136285, -8.476659]
+      },
+      "properties": {
+        "id": 7,
+        "name": "Sandandangiyeh - Gunungsalak",
+        "area": "Tabanan",
+        "length": "38.42 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.036561, -8.56322]
+      },
+      "properties": {
+        "id": 8,
+        "name": "Petut Beach/Cliffs",
+        "area": "Tabanan",
+        "length": "8.22 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.367447, -8.569754]
+      },
+      "properties": {
+        "id": 6,
+        "name": "Klungkung",
+        "area": "Banjar Siyut",
+        "length": "20.73 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.364766, -8.282558]
+      },
+      "properties": {
+        "id": 7,
+        "name": "Batur - Tianyar Beach - Savanna",
+        "area": "Besakih",
+        "length": "83.03 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.364766, -8.282558]
+      },
+      "properties": {
+        "id": 8,
+        "name": "Batur - Tianyar Beach - Savanna",
+        "area": "Besakih",
+        "length": "83.03 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.364766, -8.282558]
+      },
+      "properties": {
+        "id": 9,
+        "name": "Batur - Tianyar Beach - Savanna",
+        "area": "Besakih",
+        "length": "83.03 km",
+        "type": "mixed track"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.496362, -8.431453]
+      },
+      "properties": {
+        "id": 10,
+        "name": "Jaguar Double Loop",
+        "area": "Besakih",
+        "length": "37.39 km",
+        "type": "mixed track"
       }
     }
   ]

@@ -2,7 +2,7 @@
 
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { Chip } from './Chip';
-import { venues } from '../types/venues';
+import { types } from '../types/types';
 import { CheckIcon } from '@radix-ui/react-icons';
 import * as Popover from '@radix-ui/react-popover';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -18,7 +18,7 @@ export const FilterDropdown = ({
   sideOffset,
 }: {
   label: string;
-  filterValue: 'venue' | 'postcode';
+  filterValue: 'type' | 'postcode';
   children: React.ReactNode;
   align: 'center' | 'start' | 'end' | undefined;
   sideOffset: number | undefined;
@@ -62,18 +62,18 @@ const FilterString = ({ filterValues }: { filterValues: string[] }) => {
 };
 
 export const VenueFilters = ({ mobile = false }: { mobile: boolean }) => {
-  const { filterValues, clearFilters } = useFilterValue('venue');
+  const { filterValues, clearFilters } = useFilterValue('type');
 
   if (mobile) {
     return (
       <div className="p-1.5">
-        {venues.map((venue) => (
+        {types.map((type) => (
           <CheckboxItem
-            key={venue}
-            id={venue}
+            key={type}
+            id={type}
           >
             <Chip
-              venue={venue}
+              type={type}
               showBorder
             />
           </CheckboxItem>
@@ -85,13 +85,13 @@ export const VenueFilters = ({ mobile = false }: { mobile: boolean }) => {
   return (
     <form className="shadow-filter rounded-md bg-white flex flex-col tracking-tighter font-[450] w-fit">
       <div className="p-1.5">
-        {venues.map((venue) => (
+        {types.map((type) => (
           <CheckboxItem
-            key={venue}
-            id={venue}
+            key={type}
+            id={type}
           >
             <Chip
-              venue={venue}
+              type={type}
               showBorder={false}
             />
           </CheckboxItem>
@@ -117,7 +117,7 @@ type CheckboxItemProps = {
 };
 
 const CheckboxItem = ({ id, children }: CheckboxItemProps) => {
-  const { filterValues, updateFilters: handleCheckedChange } = useFilterValue('venue', id);
+  const { filterValues, updateFilters: handleCheckedChange } = useFilterValue('type', id);
 
   return (
     <div className="flex items-center gap-1.5 p-[3px]">
