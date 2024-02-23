@@ -55,11 +55,11 @@ body {
 }
 
 [data-marker='mixed track'] {
-  background-image: url(../public/pub.svg);
+  background-image: url(../public/black-marker.svg);
 }
 
-[data-marker='restaurant'] {
-  background-image: url(../public/restaurant.svg);
+[data-marker='dirt track'] {
+  background-image: url(../public/black-marker.svg);
 }
 
 [data-marker='bakery'] {

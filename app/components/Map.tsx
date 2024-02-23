@@ -141,15 +141,12 @@ export const MapProvider: React.FC<{
       'hsl(240, 100%, 70%)', // Bright Blue
       'hsl(120, 100%, 40%)', // Bright Light Yellow
       'hsl(311, 85%, 54%)', // Pink-Purple
-
       'hsl(4, 80%, 69%)', // Deep Red
       'hsl(33, 71%, 51%)', // Orange
-
       'hsl(23, 71%, 53%)', // Darker Orange
       'hsl(330, 100%, 70%)', // Bright Pink
       'hsl(6, 82%, 62%)', // Slightly Darker Red
       'hsl(0, 100%, 70%)', // Bright Red
-
       'hsl(14, 79%, 53%)', // Salmon
       'hsl(325, 70%, 64%)', // Soft Pink
       'hsl(16, 99%, 65%)', // Orange-Red
@@ -255,7 +252,7 @@ export const MapProvider: React.FC<{
       const el = document.createElement('div');
       // Tailwind Classname
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
-      el.setAttribute('data-marker', feature.properties.venue);
+      el.setAttribute('data-marker', feature.properties.type);
       el.addEventListener('click', () => {
         map.current?.flyTo({
           center: feature.geometry.coordinates,
@@ -269,7 +266,7 @@ export const MapProvider: React.FC<{
           `
                 <div class="name tracking-tighter">${feature.properties.name}</div>
                 <div class="text-gray-10 tracking-tighter">
-                  ${feature.properties.area} 
+Starting Point
                 </div>
         `
         );

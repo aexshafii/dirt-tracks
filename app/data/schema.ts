@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { venues } from '../types/venues';
+import { types } from '../types/types';
 
 type AllowedGeometry = GeoJSON.Feature<GeoJSON.Point | GeoJSON.LineString | GeoJSON.Polygon>;
 
@@ -8,7 +8,7 @@ const propertySchema = z.object({
   name: z.string(),
   area: z.string(),
   length: z.string(),
-  venue: z.enum(venues),
+  type: z.enum(types),
 });
 
 const geometrySchema = z.object({
