@@ -67,6 +67,29 @@ export const MapProvider: React.FC<{
       });
     });
 
+    initMap.on('load', function () {
+      // Add the tileset as a source
+      initMap.addSource('batur-beach', {
+        // Give the source a custom ID
+        type: 'vector',
+        url: 'mapbox://space-waves.0b6luok1', // Your tileset ID
+      });
+
+      initMap.addLayer({
+        id: 'terrain-data',
+        type: 'line',
+        source: 'batur-beach',
+        'source-layer': 'tracks',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': '#ff69b4',
+          'line-width': 1,
+        },
+      });
+    });
     map.current = initMap; // Set the ref to the newly created map
   }, [lat, lng, locations, map, zoom]);
 
@@ -84,7 +107,7 @@ export const MapProvider: React.FC<{
 
   React.useEffect(() => {
     const fetchDataSets = async () => {
-      const res = await fetch(`/api/mapbox-data`);
+      const res = await fetch(`/api/datasets`);
       const data = await res.json();
       console.log(data);
       // create an array of dataset ids
@@ -101,6 +124,28 @@ export const MapProvider: React.FC<{
     };
     fetchDataSets();
   }, []);
+
+  React.useEffect(() => {
+    const fetchTilesets = async () => {
+      const res = await fetch(`/api/tilesets`);
+      const data = await res.json();
+
+      console.log(data);
+      return data;
+    };
+    fetchTilesets();
+  }, []);
+  // React.useEffect(() => {
+  //   const fetchTilesets = async () => {
+  //     fetch(`https://api.mapbox.com/tilesets/v1/sources/space-waves?access_token=${ACCESS_TOKEN}`)
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         console.log(data);
+  //       });
+  //   };
+  //   fetchTilesets();
+  // }, []);
+
   React.useEffect(() => {
     if (!map.current) return;
 
