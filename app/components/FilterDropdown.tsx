@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import * as Checkbox from "@radix-ui/react-checkbox";
-import { Chip } from "./Chip";
-import { venues } from "../types/venues";
-import { CheckIcon } from "@radix-ui/react-icons";
-import * as Popover from "@radix-ui/react-popover";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
-import * as Toggle from "@radix-ui/react-toggle";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import * as Checkbox from '@radix-ui/react-checkbox';
+import { Chip } from './Chip';
+import { venues } from '../types/venues';
+import { CheckIcon } from '@radix-ui/react-icons';
+import * as Popover from '@radix-ui/react-popover';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import React from 'react';
+import * as Toggle from '@radix-ui/react-toggle';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export const FilterDropdown = ({
   label,
@@ -18,9 +18,9 @@ export const FilterDropdown = ({
   sideOffset,
 }: {
   label: string;
-  filterValue: "venue" | "postcode";
+  filterValue: 'venue' | 'postcode';
   children: React.ReactNode;
-  align: "center" | "start" | "end" | undefined;
+  align: 'center' | 'start' | 'end' | undefined;
   sideOffset: number | undefined;
 }) => {
   const { filterValues } = useFilterValue(filterValue);
@@ -30,14 +30,16 @@ export const FilterDropdown = ({
       <Popover.Trigger asChild>
         <button className="shadow-filter rounded-md bg-white hover:bg-gray-1 active:bg-gray-2  py-1.5 px-3 text-sm flex tracking-tighter font-[450] w-fit outline-none focus:shadow-filterFocus gap-2">
           <div>{label}</div>
-          {filterValues.length > 0 && (
-            <div className="relative w-[1px] h-full bg-gray-7" />
-          )}
+          {filterValues.length > 0 && <div className="relative w-[1px] h-full bg-gray-7" />}
           <FilterString filterValues={filterValues} />
         </button>
       </Popover.Trigger>
       <Popover.Portal>
-        <Popover.Content className="z-50" align={align} sideOffset={sideOffset}>
+        <Popover.Content
+          className="z-50"
+          align={align}
+          sideOffset={sideOffset}
+        >
           {children}
         </Popover.Content>
       </Popover.Portal>
@@ -46,17 +48,12 @@ export const FilterDropdown = ({
 };
 
 const FilterString = ({ filterValues }: { filterValues: string[] }) => {
-  const capitaliseFirstLetter = (string: string) =>
-    string.charAt(0).toUpperCase() + string.slice(1);
+  const capitaliseFirstLetter = (string: string) => string.charAt(0).toUpperCase() + string.slice(1);
 
   if (filterValues.length == 0) return;
 
   if (filterValues.length > 0 && filterValues.length < 3) {
-    return (
-      <span className="text-blue-9">
-        {filterValues.map(capitaliseFirstLetter).join(", ")}
-      </span>
-    );
+    return <span className="text-blue-9">{filterValues.map(capitaliseFirstLetter).join(', ')}</span>;
   }
 
   if (filterValues.length >= 3) {
@@ -65,14 +62,20 @@ const FilterString = ({ filterValues }: { filterValues: string[] }) => {
 };
 
 export const VenueFilters = ({ mobile = false }: { mobile: boolean }) => {
-  const { filterValues, clearFilters } = useFilterValue("venue");
+  const { filterValues, clearFilters } = useFilterValue('venue');
 
   if (mobile) {
     return (
       <div className="p-1.5">
         {venues.map((venue) => (
-          <CheckboxItem key={venue} id={venue}>
-            <Chip venue={venue} showBorder />
+          <CheckboxItem
+            key={venue}
+            id={venue}
+          >
+            <Chip
+              venue={venue}
+              showBorder
+            />
           </CheckboxItem>
         ))}
       </div>
@@ -83,8 +86,14 @@ export const VenueFilters = ({ mobile = false }: { mobile: boolean }) => {
     <form className="shadow-filter rounded-md bg-white flex flex-col tracking-tighter font-[450] w-fit">
       <div className="p-1.5">
         {venues.map((venue) => (
-          <CheckboxItem key={venue} id={venue}>
-            <Chip venue={venue} showBorder={false} />
+          <CheckboxItem
+            key={venue}
+            id={venue}
+          >
+            <Chip
+              venue={venue}
+              showBorder={false}
+            />
           </CheckboxItem>
         ))}
       </div>
@@ -108,10 +117,7 @@ type CheckboxItemProps = {
 };
 
 const CheckboxItem = ({ id, children }: CheckboxItemProps) => {
-  const { filterValues, updateFilters: handleCheckedChange } = useFilterValue(
-    "venue",
-    id
-  );
+  const { filterValues, updateFilters: handleCheckedChange } = useFilterValue('venue', id);
 
   return (
     <div className="flex items-center gap-1.5 p-[3px]">
@@ -123,7 +129,10 @@ const CheckboxItem = ({ id, children }: CheckboxItemProps) => {
         id={id}
       >
         <Checkbox.Indicator className="text-blue-1 bg-blue-11 border border-blue-11 rounded-[4px]">
-          <CheckIcon stroke="white" strokeWidth={"0.5px"} />
+          <CheckIcon
+            stroke="white"
+            strokeWidth={'0.5px'}
+          />
         </Checkbox.Indicator>
       </Checkbox.Root>
       <label htmlFor={id}>{children}</label>
@@ -132,7 +141,7 @@ const CheckboxItem = ({ id, children }: CheckboxItemProps) => {
 };
 
 export const PostcodeWheel = ({ mobile = false }: { mobile: boolean }) => {
-  const { filterValues, clearFilters } = useFilterValue("postcode");
+  const { filterValues, clearFilters } = useFilterValue('postcode');
 
   return (
     <div>
@@ -143,65 +152,49 @@ export const PostcodeWheel = ({ mobile = false }: { mobile: boolean }) => {
             id="E"
             className="absolute h-[200px] w-[200px] bottom-[50%] right-[50%] transition-colors transform rotate-[120deg] skew-x-[30deg] origin-[100%_100%] "
           >
-            <div className="absolute e-wedge text-sm font-medium tracking-tighter bottom-[35px] right-[45px]">
-              E
-            </div>
+            <div className="absolute e-wedge text-sm font-medium tracking-tighter bottom-[35px] right-[45px]">E</div>
           </ToggleItem>
           <ToggleItem
             id="SE"
             className="absolute h-[200px] w-[200px] bottom-[50%] right-[50%]  transition-colors transform rotate-[180deg] skew-x-[0deg] origin-[100%_100%] "
           >
-            <div className="absolute se-wedge text-sm font-medium tracking-tighter bottom-[45px] right-[55px]">
-              SE
-            </div>
+            <div className="absolute se-wedge text-sm font-medium tracking-tighter bottom-[45px] right-[55px]">SE</div>
           </ToggleItem>
           <ToggleItem
             id="SW"
             className="absolute h-[200px] w-[200px] bottom-[50%] right-[50%]  transition-colors  transform rotate-[270deg] skew-x-[20deg] origin-[100%_100%] "
           >
-            <div className="absolute sw-wedge text-sm font-medium tracking-tighter bottom-[35px] right-[40px]">
-              SW
-            </div>
+            <div className="absolute sw-wedge text-sm font-medium tracking-tighter bottom-[35px] right-[40px]">SW</div>
           </ToggleItem>
           <ToggleItem
             id="W"
             className="absolute h-[200px] w-[200px]  bottom-[50%] right-[50%] transition-colors  transform rotate-[-20deg] skew-x-[40deg] origin-[100%_100%] "
           >
-            <div className="absolute w-wedge  text-sm font-medium tracking-tighter bottom-[20px] right-[50px]">
-              W
-            </div>
+            <div className="absolute w-wedge  text-sm font-medium tracking-tighter bottom-[20px] right-[50px]">W</div>
           </ToggleItem>
           <ToggleItem
             className=" absolute h-[200px] w-[200px] bottom-[50%] right-[50%] transition-colors  transform rotate-[20deg] skew-x-[50deg] origin-[100%_100%] "
             id="NW"
           >
-            <div className="absolute nw-wedge  text-sm font-medium tracking-tighter bottom-[15px] right-[40px]">
-              NW
-            </div>
+            <div className="absolute nw-wedge  text-sm font-medium tracking-tighter bottom-[15px] right-[40px]">NW</div>
           </ToggleItem>
           <ToggleItem
             id="N"
             className="absolute h-[200px] w-[200px] bottom-[50%] right-[50%]  transition-colors transform rotate-[60deg] skew-x-[30deg] origin-[100%_100%] "
           >
-            <div className="absolute n-wedge text-sm font-medium tracking-tighter bottom-[35px] right-[45px]">
-              N
-            </div>
+            <div className="absolute n-wedge text-sm font-medium tracking-tighter bottom-[35px] right-[45px]">N</div>
           </ToggleItem>
           <ToggleItem
             id="WC"
             className=" absolute h-[50px] w-[100px] right-[68px] bottom-[68px] transition-colors rounded-[0_0_50px_50px]  rotate-90 transform origin-top"
           >
-            <div className="-rotate-90 text-sm font-medium tracking-tighter">
-              WC
-            </div>
+            <div className="-rotate-90 text-sm font-medium tracking-tighter">WC</div>
           </ToggleItem>
           <ToggleItem
             className=" absolute h-[50px] w-[100px] right-[66px] bottom-[68px] transition-colors rounded-[0_0_50px_50px]  -rotate-90 transform origin-top"
             id="EC"
           >
-            <div className="rotate-90 text-sm font-medium tracking-tighter">
-              EC
-            </div>
+            <div className="rotate-90 text-sm font-medium tracking-tighter">EC</div>
           </ToggleItem>
         </div>
       </div>
@@ -226,10 +219,7 @@ type ClassNameProps = {
 type ToggleItemProps = CheckboxItemProps & ClassNameProps;
 
 const ToggleItem = ({ id, children, className }: ToggleItemProps) => {
-  const { filterValues, updateFilters: handlePressedChange } = useFilterValue(
-    "postcode",
-    id
-  );
+  const { filterValues, updateFilters: handlePressedChange } = useFilterValue('postcode', id);
 
   return (
     <Toggle.Root
@@ -258,15 +248,13 @@ const useFilterValue = (value: string, id?: string) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const filterValues = searchParams.get(value)?.split(",") || [];
+  const filterValues = searchParams?.get(value)?.split(',') || [];
 
   const updateFilters = (state: boolean) => {
-    const currentSearchParams = new URLSearchParams(
-      Array.from(searchParams.entries())
-    );
-    const newFilterValues = state
-      ? [...filterValues, id]
-      : filterValues.filter((v) => v !== id);
+    if (!searchParams) return; // Add null check for searchParams
+
+    const currentSearchParams = new URLSearchParams(Array.from(searchParams.entries()));
+    const newFilterValues = state ? [...filterValues, id] : filterValues.filter((v) => v !== id);
 
     if (newFilterValues.length > 0) {
       currentSearchParams.set(value, newFilterValues.join());
@@ -275,20 +263,20 @@ const useFilterValue = (value: string, id?: string) => {
     }
 
     const search = currentSearchParams.toString();
-    const query = search ? `?${search}` : "";
+    const query = search ? `?${search}` : '';
 
     router.push(`${pathname}${query}`);
   };
 
   const clearFilters = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
-    const currentSearchParams = new URLSearchParams(
-      Array.from(searchParams.entries())
-    );
+    if (!searchParams) return; // Add null check for searchParams
+
+    const currentSearchParams = new URLSearchParams(Array.from(searchParams.entries()));
 
     currentSearchParams.delete(value);
     const search = currentSearchParams.toString();
-    const query = search ? `?${search}` : "";
+    const query = search ? `?${search}` : '';
 
     router.push(`${pathname}${query}`);
   };
@@ -321,10 +309,10 @@ const Compass = () => {
       const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI) + 90;
       rotation.set(angle);
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [rotation]);
 
@@ -346,10 +334,22 @@ const Compass = () => {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M0 12L6 0V12H0Z" fill="#DC241F" />
-        <path d="M12 12L6 0V12H11Z" fill="#FF6E6A" />
-        <path d="M0 12L6 24V12H0Z" fill="white" />
-        <path d="M12 12L6 24V12H11Z" fill="#EAEAEA" />
+        <path
+          d="M0 12L6 0V12H0Z"
+          fill="#DC241F"
+        />
+        <path
+          d="M12 12L6 0V12H11Z"
+          fill="#FF6E6A"
+        />
+        <path
+          d="M0 12L6 24V12H0Z"
+          fill="white"
+        />
+        <path
+          d="M12 12L6 24V12H11Z"
+          fill="#EAEAEA"
+        />
       </svg>
     </motion.div>
   );
