@@ -1,10 +1,11 @@
 // pages/api/tracks.js
 import fs from 'fs';
 import path from 'path';
-// list all the geojson file names from public/tracks into an array for data manipulation in Map.tsx
-export default function handler(req, res) {
-  const tracksDirectory = path.join(process.cwd(), 'public', 'tracks'); // Adjust the path as needed
+import { NextApiRequest, NextApiResponse } from 'next';
 
+// list all the geojson file names from public/tracks into an array for data manipulation in Map.tsx
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const tracksDirectory = path.join(process.cwd(), 'public', 'tracks');
   fs.readdir(tracksDirectory, (err, files) => {
     if (err) {
       console.error(err);

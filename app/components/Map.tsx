@@ -136,59 +136,59 @@ export const MapProvider: React.FC<{
 
     //  tilesets from mapbox
     //  Add the url and source layer for any additional tilesets you want to include
-    const tilesets = [
-      {
-        url: 'mapbox://space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2',
-        id: 'mapbox-terrain-1',
-        sourceLayer: 'Speed_Track_Besakih',
-      },
-      {
-        url: 'mapbox://space-waves.9ietosjt',
-        id: 'mapbox-terrain-2',
-        sourceLayer: 'tracks',
-      },
-      {
-        url: 'mapbox://space-waves.0b6luok1',
-        id: 'mapbox-terrain-3',
-        sourceLayer: 'tracks',
-      },
-      {
-        url: 'mapbox://space-waves.7roo2d1g',
-        id: 'mapbox-terrain-4',
-        sourceLayer: 'Bangli_offroad_loop-13d3jg',
-      },
-      {
-        url: 'mapbox://space-waves.88lvpw2c',
-        id: 'mapbox-terrain-5',
-        sourceLayer: 'tracks',
-      },
-      {
-        url: 'mapbox://space-waves.3gfy9spy',
-        id: 'mapbox-terrain-6',
-        sourceLayer: 'tracks',
-      },
-      {
-        url: 'mapbox://space-waves.5ersva15',
-        id: 'mapbox-terrain-7',
-        sourceLayer: 'tracks',
-      },
-      {
-        url: 'mapbox://space-waves.cnidsl91',
-        id: 'mapbox-terrain-8',
-        sourceLayer: 'tracks',
-      },
-      {
-        url: 'mapbox://space-waves.6b9jbuvs',
-        id: 'mapbox-terrain-9',
-        sourceLayer: 'tracks',
-      },
-      {
-        url: 'mapbox://space-waves.be6noc9r',
-        id: 'mapbox-terrain-10',
-        sourceLayer: 'tracks',
-      },
-      // Add more objects for each tileset you want to include, specifying the 'id' and 'sourceLayer' for each
-    ];
+    // const tilesets = [
+    //   {
+    //     url: 'mapbox://space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2',
+    //     id: 'mapbox-terrain-1',
+    //     sourceLayer: 'Speed_Track_Besakih',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.9ietosjt',
+    //     id: 'mapbox-terrain-2',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.0b6luok1',
+    //     id: 'mapbox-terrain-3',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.7roo2d1g',
+    //     id: 'mapbox-terrain-4',
+    //     sourceLayer: 'Bangli_offroad_loop-13d3jg',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.88lvpw2c',
+    //     id: 'mapbox-terrain-5',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.3gfy9spy',
+    //     id: 'mapbox-terrain-6',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.5ersva15',
+    //     id: 'mapbox-terrain-7',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.cnidsl91',
+    //     id: 'mapbox-terrain-8',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.6b9jbuvs',
+    //     id: 'mapbox-terrain-9',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   {
+    //     url: 'mapbox://space-waves.be6noc9r',
+    //     id: 'mapbox-terrain-10',
+    //     sourceLayer: 'tracks',
+    //   },
+    //   // Add more objects for each tileset you want to include, specifying the 'id' and 'sourceLayer' for each
+    // ];
 
     // initMap.on('load', () => {
     //   tilesets.forEach((tilesetObj, index) => {
@@ -234,25 +234,25 @@ export const MapProvider: React.FC<{
     size: number;
   }
 
-  React.useEffect(() => {
-    const fetchDataSets = async () => {
-      const res = await fetch(`/api/datasets`);
-      const data = await res.json();
-      console.log(data);
-      // create an array of dataset ids
-      const dataSetIds = data.map((dataset: Dataset) => dataset.id);
-      dataSetIds.forEach((datasetId: string) => {
-        fetch(`https://api.mapbox.com/datasets/v1/space-waves/${datasetId}/features?access_token=${ACCESS_TOKEN}`)
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-          });
-      });
+  // React.useEffect(() => {
+  //   const fetchDataSets = async () => {
+  //     const res = await fetch(`/api/datasets`);
+  //     const data = await res.json();
+  //     console.log(data);
+  //     // create an array of dataset ids
+  //     const dataSetIds = data.map((dataset: Dataset) => dataset.id);
+  //     dataSetIds.forEach((datasetId: string) => {
+  //       fetch(`https://api.mapbox.com/datasets/v1/space-waves/${datasetId}/features?access_token=${ACCESS_TOKEN}`)
+  //         .then((res) => res.json())
+  //         .then((data) => {
+  //           console.log(data);
+  //         });
+  //     });
 
-      return data;
-    };
-    fetchDataSets();
-  }, []);
+  //     return data;
+  //   };
+  //   fetchDataSets();
+  // }, []);
 
   // React.useEffect(() => {
   //   const fetchTilesets = async () => {
