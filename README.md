@@ -2,7 +2,8 @@
 
 An interactive map with a curated collection of enduro dirt bike tracks in Bali.
 See for yourself: https://dirt-tracks.vercel.app/
-![![alt text](<public/Screenshot 2024-03-01 at 10.01.44 AM.png>)](<public/Screenshot 2024-03-01 at 10.01.44 AM.png>)
+
+![alt text](public/app_screeshot.png)
 
 ## Features
 
