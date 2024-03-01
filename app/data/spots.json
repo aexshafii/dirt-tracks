@@ -141,6 +141,20 @@
         "length": "37.39 km",
         "type": "mixed track"
       }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [115.3983956, -8.2217413]
+      },
+      "properties": {
+        "id": 10,
+        "name": "Batur to Ubud",
+        "area": "Besakih",
+        "length": "114.93 km",
+        "type": "mixed track"
+      }
     }
   ]
 }
