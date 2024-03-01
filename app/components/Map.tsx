@@ -72,7 +72,27 @@ export const MapProvider: React.FC<{
       //     },
       //   });
     });
+    initMap.on('load', () => {
+      initMap.addSource('trail', {
+        type: 'geojson',
+        // Reference the file from your repository
+        data: 'tracks/trail.geojson',
+      });
 
+      initMap.addLayer({
+        id: `trail`,
+        type: 'line',
+        source: 'trail',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round',
+        },
+        paint: {
+          'line-color': 'red',
+          'line-width': 3,
+        },
+      });
+    });
     //  tilesets from mapbox
     //  Add the url and source layer for any additional tilesets you want to include
     const tilesets = [
@@ -154,34 +174,34 @@ export const MapProvider: React.FC<{
       'hsl(303, 83%, 55%)', // Deep Pink
       'hsl(300, 100%, 70%)', // Bright Magenta
     ];
-    initMap.on('load', () => {
-      tilesets.forEach((tilesetObj, index) => {
-        // Randomly select a color from the predefined set
-        const colorIndex = index % distinctColors.length; // This ensures the index wraps around
-        const orderedColor = distinctColors[colorIndex];
-        // Add source for each URL
-        initMap.addSource(tilesetObj.id, {
-          type: 'vector',
-          url: tilesetObj.url,
-        });
+    // initMap.on('load', () => {
+    //   tilesets.forEach((tilesetObj, index) => {
+    //     // Randomly select a color from the predefined set
+    //     const colorIndex = index % distinctColors.length; // This ensures the index wraps around
+    //     const orderedColor = distinctColors[colorIndex];
+    //     // Add source for each URL
+    //     initMap.addSource(tilesetObj.id, {
+    //       type: 'vector',
+    //       url: tilesetObj.url,
+    //     });
 
-        // Add layer for each source with the specified 'source-layer'
-        initMap.addLayer({
-          id: `${tilesetObj.id}-terrain-data`,
-          type: 'line',
-          source: tilesetObj.id,
-          'source-layer': tilesetObj.sourceLayer,
-          layout: {
-            'line-join': 'round',
-            'line-cap': 'round',
-          },
-          paint: {
-            'line-color': orderedColor,
-            'line-width': 3,
-          },
-        });
-      });
-    });
+    //     // Add layer for each source with the specified 'source-layer'
+    //     initMap.addLayer({
+    //       id: `${tilesetObj.id}-terrain-data`,
+    //       type: 'line',
+    //       source: tilesetObj.id,
+    //       'source-layer': tilesetObj.sourceLayer,
+    //       layout: {
+    //         'line-join': 'round',
+    //         'line-cap': 'round',
+    //       },
+    //       paint: {
+    //         'line-color': orderedColor,
+    //         'line-width': 3,
+    //       },
+    //     });
+    //   });
+    // });
 
     map.current = initMap; // Set the ref to the newly created map
   }, [lat, lng, locations, map, zoom]);
