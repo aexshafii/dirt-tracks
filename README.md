@@ -33,6 +33,27 @@ npm run dev
 
 The application will start running at `http://localhost:3000`.
 
+### How to Contribute
+
+Add any geojson file to the public/tracks folder and it will render on the map. If you have a gpx or kml you can use the following tool to convert it into a geojson file: `https://mapbox.github.io/togeojson/`
+
+For now, the properties seen on the interactive chips and starting point coordinates need to be manually added to the app/data/spots.json file. To do so, copy this object and append it to the existing list and modify the properties and coordinates as needed.
+
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [115.3983956, -8.2217413]
+},
+"properties": {
+"id": 10,
+"name": "Batur to Ubud",
+"area": "Besakih",
+"length": "114.93 km",
+"type": "mixed track"
+}
+}
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
