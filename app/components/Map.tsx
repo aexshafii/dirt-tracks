@@ -75,7 +75,7 @@ export const MapProvider: React.FC<{
 
     //  tilesets from mapbox
     //  Add the url and source layer for any additional tilesets you want to include
-    const urls = [
+    const tilesets = [
       {
         url: 'mapbox://space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2',
         id: 'mapbox-terrain-1',
@@ -126,8 +126,7 @@ export const MapProvider: React.FC<{
         id: 'mapbox-terrain-10',
         sourceLayer: 'tracks',
       },
-
-      // Add more objects for each URL you want to include, specifying the 'id' and 'sourceLayer' for each
+      // Add more objects for each tileset you want to include, specifying the 'id' and 'sourceLayer' for each
     ];
 
     const distinctColors = [
@@ -156,22 +155,22 @@ export const MapProvider: React.FC<{
       'hsl(300, 100%, 70%)', // Bright Magenta
     ];
     initMap.on('load', () => {
-      urls.forEach((urlObj, index) => {
+      tilesets.forEach((tilesetObj, index) => {
         // Randomly select a color from the predefined set
         const colorIndex = index % distinctColors.length; // This ensures the index wraps around
         const orderedColor = distinctColors[colorIndex];
         // Add source for each URL
-        initMap.addSource(urlObj.id, {
+        initMap.addSource(tilesetObj.id, {
           type: 'vector',
-          url: urlObj.url,
+          url: tilesetObj.url,
         });
 
         // Add layer for each source with the specified 'source-layer'
         initMap.addLayer({
-          id: `${urlObj.id}-terrain-data`,
+          id: `${tilesetObj.id}-terrain-data`,
           type: 'line',
-          source: urlObj.id,
-          'source-layer': urlObj.sourceLayer,
+          source: tilesetObj.id,
+          'source-layer': tilesetObj.sourceLayer,
           layout: {
             'line-join': 'round',
             'line-cap': 'round',
