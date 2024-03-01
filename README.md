@@ -1,12 +1,13 @@
-# Dirt-Tracks: Bali Off-Road Motorbike Tracks
+# Dirt Tracks
 
-Welcome to the Dirt-Tracks open source project. This project is a Next.js application styled with Tailwind CSS that provides a comprehensive map of off-road motorbike tracks in Bali, Indonesia, using Mapbox. This collection of dual sport tracks is curated by our community of riders. Whether you're an experienced rider looking for a new adventure, or a beginner looking for safe and scenic routes, our map has something for everyone.
+An interactive map with a curated collection of enduro dirt bike tracks in Bali.
+See for yourself: https://dirt-tracks.vercel.app/
+![![alt text](<public/Screenshot 2024-03-01 at 10.01.44 AM.png>)](<public/Screenshot 2024-03-01 at 10.01.44 AM.png>)
 
 ## Features
 
 - Interactive map of Bali highlighting off-road motorbike tracks.
-- Detailed information about each track, including length, area, starting point
-- User-contributed tracks and reviews.
+- Basic information about 10 tracks, including length, area, starting point
 
 ## Getting Started
 
@@ -30,22 +31,6 @@ These instructions will get you a copy of the project up and running on your loc
 npm run dev
 
 The application will start running at `http://localhost:3000`.
-
-## Uploading a Track via Tilesets on Mapbox Studio
-
-1. Go to Mapbox Studio and navigate to the Tilesets section.
-2. Click on the "New tileset" button and select "Upload file".
-3. Choose your track file (GeoJSON, Shapefile, KML, etc.) and upload it.
-4. Once the upload is complete, Mapbox Studio will process the file and create a tileset. Make sure it is publicly acessible
-
-## Fetching Tracks in the Application
-
-1. In your `.env.local` file, make sure you have your Mapbox access token defined as `NEXT_PUBLIC_MAPBOX_TOKEN`.
-2. In your application, fetch tracks using your tilesets id
-
-## Contributing
-
-We welcome contributions from the community. Whether you want to add a new track, improve the interface, or fix a bug, your contributions are always appreciated. Please read our [contributing guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## License
 
