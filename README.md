@@ -37,6 +37,8 @@ The application will start running at `http://localhost:3000`.
 
 Add any geojson file to the `public/tracks` folder and it will render on the map. If you have a gpx or kml you can use the following tool to convert it into a geojson file: `https://mapbox.github.io/togeojson/`
 
+Name your geojson file following this naming convention: `my_track.geojson`
+
 For now, the properties seen on the interactive chips and starting point coordinates need to be manually added to the `app/data/spots.json` file. To do so, copy this object and append it to the existing list and modify the properties and coordinates as needed.
 
 {
