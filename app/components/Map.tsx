@@ -72,27 +72,68 @@ export const MapProvider: React.FC<{
       //     },
       //   });
     });
-    initMap.on('load', () => {
-      initMap.addSource('trail', {
-        type: 'geojson',
-        // Reference the file from your repository
-        data: 'tracks/trail.geojson',
-      });
 
-      initMap.addLayer({
-        id: `trail`,
-        type: 'line',
-        source: 'trail',
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': 'red',
-          'line-width': 3,
-        },
-      });
-    });
+    const distinctColors = [
+      'hsl(286, 80%, 67%)', // Lavender
+      'hsl(120, 100%, 70%)', // Bright Green
+      'hsl(260, 100%, 67%)', // Blue-Purple
+      'hsl(38, 96%, 66%)', // Yellow-Orange
+      'hsl(180, 100%, 70%)', // Bright Cyan
+      'hsl(20, 83%, 51%)', // Gold
+      'hsl(267, 80%, 53%)', // Indigo
+      'hsl(240, 100%, 70%)', // Bright Blue
+      'hsl(120, 100%, 40%)', // Bright Light Yellow
+      'hsl(311, 85%, 54%)', // Pink-Purple
+      'hsl(4, 80%, 69%)', // Deep Red
+      'hsl(33, 71%, 51%)', // Orange
+      'hsl(23, 71%, 53%)', // Darker Orange
+      'hsl(330, 100%, 70%)', // Bright Pink
+      'hsl(6, 82%, 62%)', // Slightly Darker Red
+      'hsl(0, 100%, 70%)', // Bright Red
+      'hsl(14, 79%, 53%)', // Salmon
+      'hsl(325, 70%, 64%)', // Soft Pink
+      'hsl(16, 99%, 65%)', // Orange-Red
+      'hsl(1, 90%, 62%)', // Bright Red-Orange
+      'hsl(9, 71%, 55%)', // Red-Orange
+      'hsl(303, 83%, 55%)', // Deep Pink
+      'hsl(300, 100%, 70%)', // Bright Magenta
+    ];
+    async function fetchTracks() {
+      try {
+        const response = await fetch('/api/listTrails');
+        const tracksArray = await response.json();
+        console.log(tracksArray);
+        tracksArray.forEach((track: string, index: number) => {
+          const colorIndex = index % distinctColors.length; // This ensures the index wraps around
+          const orderedColor = distinctColors[colorIndex];
+          initMap.on('load', () => {
+            initMap.addSource(`${track}`, {
+              type: 'geojson',
+              // Reference the file from your repository
+              data: `tracks/${track}`,
+            });
+
+            initMap.addLayer({
+              id: `${track}`,
+              type: 'line',
+              source: `${track}`,
+              layout: {
+                'line-join': 'round',
+                'line-cap': 'round',
+              },
+              paint: {
+                'line-color': orderedColor,
+                'line-width': 3,
+              },
+            });
+          });
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchTracks();
+
     //  tilesets from mapbox
     //  Add the url and source layer for any additional tilesets you want to include
     const tilesets = [
@@ -149,31 +190,6 @@ export const MapProvider: React.FC<{
       // Add more objects for each tileset you want to include, specifying the 'id' and 'sourceLayer' for each
     ];
 
-    const distinctColors = [
-      'hsl(286, 80%, 67%)', // Lavender
-      'hsl(120, 100%, 70%)', // Bright Green
-      'hsl(260, 100%, 67%)', // Blue-Purple
-      'hsl(38, 96%, 66%)', // Yellow-Orange
-      'hsl(180, 100%, 70%)', // Bright Cyan
-      'hsl(20, 83%, 51%)', // Gold
-      'hsl(267, 80%, 53%)', // Indigo
-      'hsl(240, 100%, 70%)', // Bright Blue
-      'hsl(120, 100%, 40%)', // Bright Light Yellow
-      'hsl(311, 85%, 54%)', // Pink-Purple
-      'hsl(4, 80%, 69%)', // Deep Red
-      'hsl(33, 71%, 51%)', // Orange
-      'hsl(23, 71%, 53%)', // Darker Orange
-      'hsl(330, 100%, 70%)', // Bright Pink
-      'hsl(6, 82%, 62%)', // Slightly Darker Red
-      'hsl(0, 100%, 70%)', // Bright Red
-      'hsl(14, 79%, 53%)', // Salmon
-      'hsl(325, 70%, 64%)', // Soft Pink
-      'hsl(16, 99%, 65%)', // Orange-Red
-      'hsl(1, 90%, 62%)', // Bright Red-Orange
-      'hsl(9, 71%, 55%)', // Red-Orange
-      'hsl(303, 83%, 55%)', // Deep Pink
-      'hsl(300, 100%, 70%)', // Bright Magenta
-    ];
     // initMap.on('load', () => {
     //   tilesets.forEach((tilesetObj, index) => {
     //     // Randomly select a color from the predefined set
