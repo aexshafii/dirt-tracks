@@ -16,6 +16,19 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Filter files to only include .geojson files, if necessary
     const geojsonFiles = files.filter((file) => file.endsWith('.geojson'));
 
-    res.status(200).json(geojsonFiles);
+    const names = [] as string[];
+
+    geojsonFiles.forEach((file) => {
+      const filePath = path.join(tracksDirectory, file);
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const geojson = JSON.parse(fileContent);
+
+      // Extract the name property
+      const name = geojson.features[0].properties.name;
+
+      names.push(name);
+    });
+
+    res.status(200).json({ geojsonFiles, names });
   });
 }
