@@ -2,7 +2,7 @@ async function getTrailsData() {
   try {
     const response = await fetch('/api/getTrailsData');
     const tracksArray = await response.json();
-    console.log(tracksArray);
+    // console.log(tracksArray);
 
     return tracksArray;
   } catch (error) {

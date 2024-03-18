@@ -25,7 +25,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
       // Extract the name property
       const name = geojson.features[0].properties.name;
-      console.log('name', name);
       const coordinate = geojson.features[0].geometry.coordinates[0].slice(0, 2);
       // add conditional to support diffrent data structures for coordinates to make all current geojson files compatible
       // if the coordinates are [Array(3), Array(3)], then get array[0] and slice(0, 2) to get the first two coordinates
@@ -39,8 +38,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
       names.push(name);
       // console.log(name);
     });
-    // geojsonfiles, names, coordinates should be accessible within an array index
-    console.log('names', names);
     res.status(200).json({ geojsonFiles, names, coordinates });
   });
 }

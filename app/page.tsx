@@ -42,6 +42,25 @@ async function getSpots() {
   // };
 
   const getServerSideProps = async () => {
+    // log all of this
+    // params	If this page uses a dynamic route, params contains the route parameters. If the page name is [id].js, then params will look like { id: ... }.
+    // req	The HTTP IncomingMessage object, with an additional cookies prop, which is an object with string keys mapping to string values of cookies.
+    // res	The HTTP response object.
+    // query	An object representing the query string, including dynamic route parameters.
+    // preview	(Deprecated for draftMode) preview is true if the page is in the Preview Mode and false otherwise.
+    // previewData	(Deprecated for draftMode) The preview data set by setPreviewData.
+    // draftMode	draftMode is true if the page is in the Draft Mode and false otherwise.
+    // resolvedUrl	A normalized version of the request URL that strips the _next/data prefix for client transitions and includes original query values.
+    // locale	Contains the active locale (if enabled).
+    // locales	Contains all supported locales (if enabled).
+    // defaultLocale	Contains the configured default locale (if enabled).
+    const host = process.env.NODE_ENV === 'production' ? 'dirt-tracks.vercel.app' : 'localhost';
+    console.log('hosted on', process.env.NODE_ENV);
+    const port = process.env.NODE_ENV === 'production' ? '' : ':8080';
+    const endpoint = 'api/getTrailsData';
+
+    const url = `http://${host}${port}/${endpoint}`;
+    console.log('url', url);
     // Fetch data from external API
     const res = await fetch('http://localhost:8080/api/getTrailsData');
     const data: TrailData = await res.json();
@@ -50,14 +69,10 @@ async function getSpots() {
     return { props: { data } };
   };
 
-  // const data = await fs.readFile(path.join(process.cwd(), 'app/data/spots.json'));
-  //const data2 = await getTrailsData();
-
-  // make it a string
   const trailsData = await getServerSideProps();
 
   const rawData = trailsData.props.data;
-  console.log('tdata', rawData.names);
+  //console.log('tdata', rawData.names);
   // associate the data from each keys according to it's index
   const fileNames = rawData.geojsonFiles;
   // console.log('fileNames', fileNames);

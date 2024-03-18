@@ -36,7 +36,6 @@ export const MobileDrawer = ({
 }: {
   spots: Array<{ fileName: string; coordinates: [number, number]; name: string }>;
 }) => {
-  console.log(spots);
   const sheetRef = React.useRef<BottomSheetRef>(null);
   const [showFilter, setShowFilter] = React.useState(false);
   const { width } = useWindowSize();

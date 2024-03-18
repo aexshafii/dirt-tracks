@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 //Get  name of the spot
 type Geometry = {
-  type: 'Point';
+  type: string;
   coordinates: [number, number];
 };
 
@@ -38,7 +38,6 @@ export const SpotsList = ({
 
   const flyToSpot = (location: FlyToSpot) => {
     if (!map?.current) return;
-    console.log(location);
     map.current.flyTo({
       center: location.coordinates,
       zoom: 15,
