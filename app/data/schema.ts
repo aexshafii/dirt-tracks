@@ -6,9 +6,9 @@ type AllowedGeometry = GeoJSON.Feature<GeoJSON.Point | GeoJSON.LineString | GeoJ
 const propertySchema = z.object({
   id: z.number(),
   name: z.string(),
-  area: z.string(),
-  length: z.string(),
-  type: z.enum(types),
+  //area: z.string(),
+  //length: z.string(),
+  // type: z.enum(types),
 });
 
 const geometrySchema = z.object({

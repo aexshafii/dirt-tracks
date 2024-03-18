@@ -31,7 +31,12 @@ const useWindowSize = () => {
   return size;
 };
 
-export const MobileDrawer = ({ spots }: { spots: SpotsProps }) => {
+export const MobileDrawer = ({
+  spots,
+}: {
+  spots: Array<{ fileName: string; coordinates: [number, number]; name: string }>;
+}) => {
+  console.log(spots);
   const sheetRef = React.useRef<BottomSheetRef>(null);
   const [showFilter, setShowFilter] = React.useState(false);
   const { width } = useWindowSize();
@@ -57,7 +62,7 @@ export const MobileDrawer = ({ spots }: { spots: SpotsProps }) => {
       </button> */}
       <Drawer
         sheetRef={sheetRef}
-        numSpots={spots.features.length}
+        numSpots={spots.length}
       >
         <div className="flex flex-col gap-4 pb-4">
           {showFilter && (
@@ -96,7 +101,7 @@ const Drawer = ({ children, sheetRef }: DrawerProps) => {
       blocking={false}
       expandOnContentDrag
       onSpringStart={() => {
-        console.log('Transition from:', sheetRef?.current?.height);
+        //  console.log('Transition from:', sheetRef?.current?.height);
         requestAnimationFrame(() => {
           if (sheetRef?.current?.height === window?.innerHeight) {
             setOpacity(0);
