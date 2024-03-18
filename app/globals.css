@@ -54,20 +54,8 @@ body {
   transform: skew(330deg) rotate(300deg);
 }
 
-[data-marker='mixed track'] {
+.marker {
   background-image: url(../public/black-marker.svg);
-}
-
-[data-marker='dirt track'] {
-  background-image: url(../public/black-marker.svg);
-}
-
-[data-marker='bakery'] {
-  background-image: url(../public/bakery.svg);
-}
-
-[data-marker='coffee'] {
-  background-image: url(../public/coffee.svg);
 }
 
 .fade {

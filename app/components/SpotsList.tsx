@@ -8,39 +8,33 @@ import { Inter } from 'next/font/google';
 import { BottomSheetRef } from 'react-spring-bottom-sheet';
 import * as turf from '@turf/turf';
 import React from 'react';
+import fetchTracks from './Tracks';
 const inter = Inter({ subsets: ['latin'] });
 
-type Geometry = {
-  type: 'Point';
+//Get  name of the spot
+type Feature = {
   coordinates: [number, number];
+  name: string;
 };
 
-type Feature = {
-  type: 'Feature';
-  properties: {
-    id: number;
-    name: string;
-    area: string;
-    length?: string;
-    type: 'mixed track' | 'dirt track';
-  };
-  geometry: Geometry;
+type FlyToSpot = {
+  type: string;
+  coordinates: [number, number];
 };
 
 export const SpotsList = ({
   locations,
   bottomSheetRef,
 }: {
-  locations: SpotsProps;
+  locations: { fileName: string; coordinates: [number, number]; name: string }[];
   bottomSheetRef?: React.RefObject<BottomSheetRef>;
 }) => {
   const { map, markers } = useMapContext();
 
-  const flyToSpot = (geometry: Geometry) => {
+  const flyToSpot = (location: FlyToSpot) => {
     if (!map?.current) return;
-
     map.current.flyTo({
-      center: geometry.coordinates,
+      center: location.coordinates,
       zoom: 15,
     });
   };
@@ -49,9 +43,7 @@ export const SpotsList = ({
     if (!map?.current) return;
 
     const marker = markers?.current?.find(
-      (marker) =>
-        marker.getLngLat().lng === feature.geometry.coordinates[0] &&
-        marker.getLngLat().lat === feature.geometry.coordinates[1]
+      (marker) => marker.getLngLat().lng === feature.coordinates[0] && marker.getLngLat().lat === feature.coordinates[1]
     );
 
     markers?.current?.filter((m) => m !== marker).map((m) => m?.getPopup()?.remove());
@@ -62,13 +54,27 @@ export const SpotsList = ({
         marker.togglePopup();
       }
     }
+    // const fetchData = async () => {
+    //   const tracksArray = await fetchTracks();
+    //   const coordinates = tracksArray.coordinates;
+
+    //   coordinates.forEach((coordinate: any, index: number) => {
+    //     console.log(coordinate);
+    //     //  new mapboxgl.Marker().setLngLat(coordinate).addTo(initMap);
+
+    //   });
+    // };
+    // fetchData();
   };
 
   const handleClick = (feature: Feature) => {
     if (bottomSheetRef?.current) {
       bottomSheetRef.current.snapTo(({ headerHeight }) => headerHeight);
     }
-    flyToSpot(feature.geometry);
+    flyToSpot({
+      type: 'Point',
+      coordinates: feature.coordinates,
+    });
     togglePopup(feature);
   };
 
@@ -97,15 +103,15 @@ export const SpotsList = ({
   // }, []);
   return (
     <>
-      {locations.features.map((feature) => (
+      {locations.map((location: { fileName: string; coordinates: [number, number]; name: string }, i: number) => (
         <Spot
-          handleClick={() => handleClick(feature)}
-          key={feature.properties.id}
-          id={feature.properties.id}
-          name={feature.properties.name}
-          type={feature.properties.type}
-          length={feature.properties.length}
-          area={feature.properties.area}
+          handleClick={() => handleClick(location)}
+          key={i}
+          id={i}
+          name={location.name}
+          // type={feature.properties.type}
+          // length={feature.properties.length}
+          // area={feature.properties.area}
         />
       ))}
     </>
@@ -116,7 +122,7 @@ interface ExtendedSpotProps extends SpotProps {
   handleClick: () => void;
 }
 
-export const Spot = ({ id, name, area, length, type, handleClick }: ExtendedSpotProps) => {
+export const Spot = ({ id, name, handleClick }: ExtendedSpotProps) => {
   return (
     <div
       onClick={handleClick}
@@ -124,11 +130,11 @@ export const Spot = ({ id, name, area, length, type, handleClick }: ExtendedSpot
     >
       <div className="tracking-tighter font-[450]">
         <div>{name}</div>
-        <div className="text-gray-10">
+        {/* <div className="text-gray-10">
           {area} - {length}
-        </div>
+        </div> */}
       </div>
-      <Chip type={type} />
+      {/* <Chip type={type} /> */}
     </div>
   );
 };

@@ -5,6 +5,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { SpotsProps } from '../data/schema';
 import React, { useEffect, useState } from 'react';
 import * as turf from '@turf/turf';
+import fetchTracks from './Tracks';
+import { distinctColors } from '../constants/constants';
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 const INITIAL_LNG = 115.092;
 const INITIAL_LAT = -8.3405;
@@ -23,9 +25,10 @@ const MapContext = React.createContext<MapContextValue>({});
 export const useMapContext = (): MapContextValue => React.useContext(MapContext);
 
 export const MapProvider: React.FC<{
-  locations: SpotsProps;
+  locations: Array<{ fileName: string; coordinates: [number, number]; name: string }>;
   children: React.ReactNode;
 }> = ({ locations, children }) => {
+  //console.log(locations);
   const mapContainer = React.useRef<HTMLDivElement | null>(null);
   const map = React.useRef<mapboxgl.Map | null>(null);
   const markers = React.useRef<mapboxgl.Marker[]>([]);
@@ -43,12 +46,9 @@ export const MapProvider: React.FC<{
       zoom: zoom,
     });
 
-    initMap.on('load', () => {
-      map.current?.addSource('locations', {
-        type: 'geojson',
-        data: locations,
-      });
+    console.log(locations);
 
+    initMap.on('load', () => {
       initMap.addSource('some-id', {
         type: 'vector',
         tiles: ['https://studio.mapbox.com/tilesets/space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2'],
@@ -72,67 +72,44 @@ export const MapProvider: React.FC<{
       //     },
       //   });
     });
+    const fetchData = async () => {
+      const tracksArray = await fetchTracks();
+      const fileNames = tracksArray.geojsonFiles;
+      const coordinates = tracksArray.coordinates;
+      //  console.log('coordinates', coordinates);
+      fileNames.forEach((fileName: string, index: number) => {
+        const colorIndex = index % distinctColors.length;
+        const orderedColor = distinctColors[colorIndex];
+        initMap.on('load', () => {
+          initMap.addSource(`${fileName}`, {
+            type: 'geojson',
+            // Reference the file from your repository
+            data: `tracks/${fileName}`,
+          });
 
-    const distinctColors = [
-      'hsl(286, 80%, 67%)', // Lavender
-      'hsl(120, 100%, 70%)', // Bright Green
-      'hsl(260, 100%, 67%)', // Blue-Purple
-      'hsl(38, 96%, 66%)', // Yellow-Orange
-      'hsl(180, 100%, 70%)', // Bright Cyan
-      'hsl(20, 83%, 51%)', // Gold
-      'hsl(267, 80%, 53%)', // Indigo
-      'hsl(240, 100%, 70%)', // Bright Blue
-      'hsl(120, 100%, 40%)', // Bright Light Yellow
-      'hsl(311, 85%, 54%)', // Pink-Purple
-      'hsl(4, 80%, 69%)', // Deep Red
-      'hsl(33, 71%, 51%)', // Orange
-      'hsl(23, 71%, 53%)', // Darker Orange
-      'hsl(330, 100%, 70%)', // Bright Pink
-      'hsl(6, 82%, 62%)', // Slightly Darker Red
-      'hsl(0, 100%, 70%)', // Bright Red
-      'hsl(14, 79%, 53%)', // Salmon
-      'hsl(325, 70%, 64%)', // Soft Pink
-      'hsl(16, 99%, 65%)', // Orange-Red
-      'hsl(1, 90%, 62%)', // Bright Red-Orange
-      'hsl(9, 71%, 55%)', // Red-Orange
-      'hsl(303, 83%, 55%)', // Deep Pink
-      'hsl(300, 100%, 70%)', // Bright Magenta
-    ];
-    async function fetchTracks() {
-      try {
-        const response = await fetch('/api/listTrails');
-        const tracksArray = await response.json();
-        console.log(tracksArray);
-        tracksArray.forEach((track: string, index: number) => {
-          const colorIndex = index % distinctColors.length; // This ensures the index wraps around
-          const orderedColor = distinctColors[colorIndex];
-          initMap.on('load', () => {
-            initMap.addSource(`${track}`, {
-              type: 'geojson',
-              // Reference the file from your repository
-              data: `tracks/${track}`,
-            });
-
-            initMap.addLayer({
-              id: `${track}`,
-              type: 'line',
-              source: `${track}`,
-              layout: {
-                'line-join': 'round',
-                'line-cap': 'round',
-              },
-              paint: {
-                'line-color': orderedColor,
-                'line-width': 3,
-              },
-            });
+          initMap.addLayer({
+            id: `${fileName}`,
+            type: 'line',
+            source: `${fileName}`,
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round',
+            },
+            paint: {
+              'line-color': orderedColor,
+              'line-width': 3,
+            },
           });
         });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchTracks();
+      });
+
+      // coordinates.forEach((coordinate: any, index: number) => {
+      //   //  console.log(coordinate);
+      //   new mapboxgl.Marker().setLngLat(coordinate).addTo(initMap);
+      // });
+    };
+
+    fetchData();
 
     //  tilesets from mapbox
     //  Add the url and source layer for any additional tilesets you want to include
@@ -281,47 +258,48 @@ export const MapProvider: React.FC<{
     // Remove old markers
     markers.current.forEach((marker) => marker.remove());
     markers.current = [];
-
+    // console.log(locations);
     // Add new markers
-    for (const feature of locations.features) {
+    for (const location of locations) {
+      // console.log(location);
       const el = document.createElement('div');
       // Tailwind Classname
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
-      el.setAttribute('data-marker', feature.properties.type);
+      // set class of el as marker
+
       el.addEventListener('click', () => {
         map.current?.flyTo({
-          center: feature.geometry.coordinates,
+          center: location.coordinates,
           zoom: 15,
         });
       });
 
-      const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: false })
-        .setLngLat(feature.geometry.coordinates)
-        .setHTML(
-          `
-                <div class="name tracking-tighter">${feature.properties.name}</div>
+      const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: false }).setLngLat(location.coordinates).setHTML(
+        `
+                <div class="name tracking-tighter">${location.name}</div>
                 <div class="text-gray-10 tracking-tighter">
 Starting Point
                 </div>
         `
-        );
+      );
 
       const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
-        .setLngLat(feature.geometry.coordinates)
+        .setLngLat(location.coordinates)
         .setPopup(popup)
         .addTo(map.current);
-
+      //  el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
+      // el.setAttribute('data-marker', coordinate.properties.type);
       markers.current.push(marker);
     }
   }, [locations]);
 
-  React.useEffect(() => {
-    if (!map.current) return;
-    const source = map.current?.getSource('locations') as GeoJSONSource;
-    if (source) {
-      source.setData(locations);
-    }
-  }, [locations, map]);
+  // React.useEffect(() => {
+  //   if (!map.current) return;
+  //   const source = map.current?.getSource('locations') as GeoJSONSource;
+  //   if (source) {
+  //     source.setData(locations);
+  //   }
+  // }, [locations, map]);
 
   React.useEffect(() => {
     if (!map.current) return; // wait for map to initialize
