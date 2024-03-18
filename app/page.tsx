@@ -1,23 +1,8 @@
 import { Map, MapProvider } from './components/Map';
-import dynamic from 'next/dynamic';
-import { spotsSchema } from './data/schema';
-import { promises as fs } from 'fs';
-import path from 'path';
-import { FilterDropdown, VenueFilters, PostcodeWheel } from './components/FilterDropdown';
-import { Logo } from './components/Logo';
-import { SpotsList } from './components/SpotsList';
-import { Drawer } from 'vaul';
-import { MobileDrawer } from './components/Drawer';
-import { get } from 'http';
-import getTrailsData from './components/Tracks';
-import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import { object } from 'zod';
-import { NextPageContext } from 'next';
 
-// function getPostcode(postcode: string) {
-//   const match = postcode.match(/^[^\d]+/);
-//   return match ? match[0] : "";
-// }
+import { SpotsList } from './components/SpotsList';
+import { MobileDrawer } from './components/Drawer';
+
 type Coordinate = [number, number];
 
 type TrailData = {
@@ -31,41 +16,18 @@ type ServerSideProps = {
     trailData: TrailData;
   };
 };
+
 async function getSpots() {
-  // const getServerSideProps: GetServerSideProps<{ trailData: TrailData }> = async () => {
-  //   // Fetch data from external API
-  //   const res = await fetch('http://localhost:3000/api/getTrailsData');
-  //   const trailData: TrailData = await res.json();
-
-  //   // Pass data to the page via props
-  //   return { props: { trailData } };
-  // };
-
   const getServerSideProps = async () => {
-    // log all of this
-    // params	If this page uses a dynamic route, params contains the route parameters. If the page name is [id].js, then params will look like { id: ... }.
-    // req	The HTTP IncomingMessage object, with an additional cookies prop, which is an object with string keys mapping to string values of cookies.
-    // res	The HTTP response object.
-    // query	An object representing the query string, including dynamic route parameters.
-    // preview	(Deprecated for draftMode) preview is true if the page is in the Preview Mode and false otherwise.
-    // previewData	(Deprecated for draftMode) The preview data set by setPreviewData.
-    // draftMode	draftMode is true if the page is in the Draft Mode and false otherwise.
-    // resolvedUrl	A normalized version of the request URL that strips the _next/data prefix for client transitions and includes original query values.
-    // locale	Contains the active locale (if enabled).
-    // locales	Contains all supported locales (if enabled).
-    // defaultLocale	Contains the configured default locale (if enabled).
-    const host = process.env.NODE_ENV === 'production' ? 'dirt-tracks.vercel.app' : 'localhost';
-    console.log('hosted on', process.env.NODE_ENV);
-    const port = process.env.NODE_ENV === 'production' ? '' : ':3000';
-    const endpoint = 'api/getTrailsData';
+    // detect if production or development
+    const baseUrl = process.env.NODE_ENV === 'production' ? 'https://dirt-tracks.vercel.app' : 'http://localhost:3000';
+    const url = `${baseUrl}/api/getTrailsData`;
 
-    const url = `http://${host}${port}/${endpoint}`;
-    console.log('url', url);
+    console.log('url in use', url);
     // Fetch data from external API
     const res = await fetch(url);
     const data: TrailData = await res.json();
     // Pass data to the page via props
-
     return { props: { data } };
   };
 
@@ -86,7 +48,7 @@ async function getSpots() {
   return tracksArray;
 }
 
-export default async function Home({}: { searchParams: { [key: string]: string | string[] | undefined } }) {
+export default async function Home() {
   const tracksData = await getSpots();
   //console.log('tracksData', tracksData);
   return (
