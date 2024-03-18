@@ -56,13 +56,13 @@ async function getSpots() {
     // defaultLocale	Contains the configured default locale (if enabled).
     const host = process.env.NODE_ENV === 'production' ? 'dirt-tracks.vercel.app' : 'localhost';
     console.log('hosted on', process.env.NODE_ENV);
-    const port = process.env.NODE_ENV === 'production' ? '' : ':8080';
+    const port = process.env.NODE_ENV === 'production' ? '' : ':3000';
     const endpoint = 'api/getTrailsData';
 
     const url = `http://${host}${port}/${endpoint}`;
     console.log('url', url);
     // Fetch data from external API
-    const res = await fetch('http://localhost:8080/api/getTrailsData');
+    const res = await fetch(url);
     const data: TrailData = await res.json();
     // Pass data to the page via props
 
