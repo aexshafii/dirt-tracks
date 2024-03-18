@@ -12,11 +12,6 @@ import fetchTracks from './Tracks';
 const inter = Inter({ subsets: ['latin'] });
 
 //Get  name of the spot
-type Geometry = {
-  type: string;
-  coordinates: [number, number];
-};
-
 type Feature = {
   coordinates: [number, number];
   name: string;
@@ -46,7 +41,6 @@ export const SpotsList = ({
 
   const togglePopup = (feature: Feature) => {
     if (!map?.current) return;
-    //console.log('here', feature);
 
     const marker = markers?.current?.find(
       (marker) => marker.getLngLat().lng === feature.coordinates[0] && marker.getLngLat().lat === feature.coordinates[1]
@@ -107,8 +101,6 @@ export const SpotsList = ({
 
   //   fetchData();
   // }, []);
-  // console.log(locations);
-  console.log(locations);
   return (
     <>
       {locations.map((location: { fileName: string; coordinates: [number, number]; name: string }, i: number) => (

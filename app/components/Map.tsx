@@ -46,12 +46,9 @@ export const MapProvider: React.FC<{
       zoom: zoom,
     });
 
-    initMap.on('load', () => {
-      map.current?.addSource('locations', {
-        type: 'geojson',
-        data: locations,
-      });
+    console.log(locations);
 
+    initMap.on('load', () => {
       initMap.addSource('some-id', {
         type: 'vector',
         tiles: ['https://studio.mapbox.com/tilesets/space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2'],
