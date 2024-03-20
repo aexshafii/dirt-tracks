@@ -3,54 +3,14 @@ import { Map, MapProvider } from './components/Map';
 import { SpotsList } from './components/SpotsList';
 import { MobileDrawer } from './components/Drawer';
 
+import { getTrailsData } from '@/pages/api/getTrailsData';
+
 type Coordinate = [number, number];
 
-type TrailData = {
-  geojsonFiles: string[];
-  names: string[];
-  coordinates: Coordinate[];
-};
-
-type ServerSideProps = {
-  props: {
-    trailData: TrailData;
-  };
-};
-
-async function getSpots() {
-  const getServerSideProps = async () => {
-    // detect if production or development
-    const baseUrl = process.env.NODE_ENV === 'production' ? 'https://dirt-tracks.vercel.app' : 'http://localhost:3000';
-    const url = `${baseUrl}/api/getTrailsData`;
-
-    console.log('url in use', url);
-    // Fetch data from external API
-    const res = await fetch(url);
-    const data: TrailData = await res.json();
-    // Pass data to the page via props
-    return { props: { data } };
-  };
-
-  const trailsData = await getServerSideProps();
-
-  const rawData = trailsData.props.data;
-  //console.log('tdata', rawData.names);
-  // associate the data from each keys according to it's index
-  const fileNames = rawData.geojsonFiles;
-  // console.log('fileNames', fileNames);
-  const tracksArray = [] as Array<{ fileName: string; coordinates: Coordinate; name: string }>;
-  fileNames.map((fileName, i) => {
-    const tracksProps = { fileName: fileName, coordinates: rawData.coordinates[i], name: rawData.names[i] };
-    tracksArray.push(tracksProps);
-    // console.log(tracksProps);
-  });
-  //console.log('props', tracksArray);
-  return tracksArray;
-}
-
 export default async function Home() {
-  const tracksData = await getSpots();
   //console.log('tracksData', tracksData);
+  const tracksData = await getTrailsData();
+  console.log('data', tracksData);
   return (
     <MapProvider locations={tracksData}>
       <div className="flex h-full">
