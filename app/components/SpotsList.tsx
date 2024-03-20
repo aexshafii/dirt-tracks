@@ -9,6 +9,7 @@ import { BottomSheetRef } from 'react-spring-bottom-sheet';
 import * as turf from '@turf/turf';
 import React from 'react';
 import fetchTracks from './Tracks';
+import displayTrack from '../utils/displayTrack';
 const inter = Inter({ subsets: ['latin'] });
 
 //Get  name of the spot
@@ -29,13 +30,13 @@ export const SpotsList = ({
   locations: { fileName: string; coordinates: [number, number]; name: string }[];
   bottomSheetRef?: React.RefObject<BottomSheetRef>;
 }) => {
-  const { map, markers } = useMapContext();
+  const { map, markers, tracks } = useMapContext();
 
   const flyToSpot = (location: FlyToSpot) => {
     if (!map?.current) return;
     map.current.flyTo({
       center: location.coordinates,
-      zoom: 15,
+      zoom: 10,
     });
   };
 
@@ -54,53 +55,26 @@ export const SpotsList = ({
         marker.togglePopup();
       }
     }
-    // const fetchData = async () => {
-    //   const tracksArray = await fetchTracks();
-    //   const coordinates = tracksArray.coordinates;
-
-    //   coordinates.forEach((coordinate: any, index: number) => {
-    //     console.log(coordinate);
-    //     //  new mapboxgl.Marker().setLngLat(coordinate).addTo(initMap);
-
-    //   });
-    // };
-    // fetchData();
   };
 
-  const handleClick = (feature: Feature) => {
+  const handleClick = async (location: { fileName: string; coordinates: [number, number]; name: string }) => {
     if (bottomSheetRef?.current) {
       bottomSheetRef.current.snapTo(({ headerHeight }) => headerHeight);
     }
     flyToSpot({
       type: 'Point',
-      coordinates: feature.coordinates,
+      coordinates: location.coordinates,
     });
-    togglePopup(feature);
+    togglePopup(location);
+
+    // Load the location data for the selected spot
+
+    // Add the location data to the map
+    displayTrack(location, locations, map);
+
+    console.log('clicked');
   };
 
-  // async function getData() {
-  //   const res = await fetch(
-  //     'https://api.mapbox.com/datasets/v1/space-waves/clsini8fa195j1tpcsrhudsf4/features?access_token=pk.eyJ1Ijoic3BhY2Utd2F2ZXMiLCJhIjoiY2xzaWprNnFyMWV6bDJ2cjI2Z3k3cWJjeiJ9.CFoO_J41AuEvImG63SkUpg'
-  //   );
-  //   if (!res.ok) {
-  //     throw new Error('Failed to fetch data');
-  //   }
-  //   return res.json();
-  // }
-  // React.useEffect(() => {
-  //   const fetchData = async () => {
-  //     const data = await getData();
-  //     console.log(data.features[0].geometry.coordinates);
-  //     const coordinates = data.features[0].geometry.coordinates;
-  //     var line = turf.lineString(coordinates);
-  //     var length = turf.length(line, { units: 'kilometers' });
-  //     // Do something with the data
-  //     console.log(length);
-  //     return length;
-  //   };
-
-  //   fetchData();
-  // }, []);
   return (
     <>
       {locations.map((location: { fileName: string; coordinates: [number, number]; name: string }, i: number) => (
