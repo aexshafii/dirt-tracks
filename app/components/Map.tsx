@@ -78,91 +78,6 @@ export const MapProvider: React.FC<{
       });
     });
 
-    //  tilesets from mapbox
-    //  Add the url and source layer for any additional tilesets you want to include
-    // const tilesets = [
-    //   {
-    //     url: 'mapbox://space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2',
-    //     id: 'mapbox-terrain-1',
-    //     sourceLayer: 'Speed_Track_Besakih',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.9ietosjt',
-    //     id: 'mapbox-terrain-2',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.0b6luok1',
-    //     id: 'mapbox-terrain-3',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.7roo2d1g',
-    //     id: 'mapbox-terrain-4',
-    //     sourceLayer: 'Bangli_offroad_loop-13d3jg',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.88lvpw2c',
-    //     id: 'mapbox-terrain-5',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.3gfy9spy',
-    //     id: 'mapbox-terrain-6',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.5ersva15',
-    //     id: 'mapbox-terrain-7',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.cnidsl91',
-    //     id: 'mapbox-terrain-8',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.6b9jbuvs',
-    //     id: 'mapbox-terrain-9',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   {
-    //     url: 'mapbox://space-waves.be6noc9r',
-    //     id: 'mapbox-terrain-10',
-    //     sourceLayer: 'tracks',
-    //   },
-    //   // Add more objects for each tileset you want to include, specifying the 'id' and 'sourceLayer' for each
-    // ];
-
-    // initMap.on('load', () => {
-    //   tilesets.forEach((tilesetObj, index) => {
-    //     // Randomly select a color from the predefined set
-    //     const colorIndex = index % distinctColors.length; // This ensures the index wraps around
-    //     const orderedColor = distinctColors[colorIndex];
-    //     // Add source for each URL
-    //     initMap.addSource(tilesetObj.id, {
-    //       type: 'vector',
-    //       url: tilesetObj.url,
-    //     });
-
-    //     // Add layer for each source with the specified 'source-layer'
-    //     initMap.addLayer({
-    //       id: `${tilesetObj.id}-terrain-data`,
-    //       type: 'line',
-    //       source: tilesetObj.id,
-    //       'source-layer': tilesetObj.sourceLayer,
-    //       layout: {
-    //         'line-join': 'round',
-    //         'line-cap': 'round',
-    //       },
-    //       paint: {
-    //         'line-color': orderedColor,
-    //         'line-width': 3,
-    //       },
-    //     });
-    //   });
-    // });
-
     map.current = initMap; // Set the ref to the newly created map
   }, [lat, lng, locations, map, zoom]);
 
@@ -199,7 +114,7 @@ export const MapProvider: React.FC<{
       const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: false }).setLngLat(location.coordinates).setHTML(
         `
                 <div class="name tracking-tighter">${location.name}</div>
-                <div class="text-gray-10 tracking-tighter">
+                <div class="text-gray-8 tracking-tighter">
 Starting Point
                 </div>
         `

@@ -126,9 +126,9 @@ export const Spot = ({ id, name, handleClick }: ExtendedSpotProps) => {
   return (
     <div
       onClick={handleClick}
-      className="cursor-pointer p-3 flex items-center text-sm justify-between self-stretch rounded-md bg-white shadow-card"
+      className="cursor-pointer p-3 flex items-center text-sm justify-between self-stretch rounded-md bg-gray-13 shadow-card"
     >
-      <div className="tracking-tighter font-[450]">
+      <div className="tracking-tighter font-[450] text-white ">
         <div>{name}</div>
         {/* <div className="text-gray-10">
           {area} - {length}
