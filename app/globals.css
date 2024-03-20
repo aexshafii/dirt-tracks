@@ -93,23 +93,26 @@ body {
   font-weight: 450;
   font-size: 14px;
   padding-right: 48px !important;
+  /* // set to bg-gray-13 from tailwind config */
+  background-color: rgb(39, 39, 42) !important;
+  color: white;
 }
 
 .mapboxgl-popup-close-button {
   @apply !p-3 h-full;
   border-radius: 0 6px 6px 0 !important;
+  outline: none !important;
 }
 
 .mapboxgl-popup-close-button:focus {
-  outline: none;
-  border-radius: 6px !important;
-  @apply !shadow-innerFilterFocus;
+  outline: none !important;
+
+  border-radius: 0px !important;
 }
 
 .mapboxgl-popup-close-button:focus-visible {
-  outline: none;
+  outline: none !important;
   border-radius: 6px !important;
-  @apply !shadow-innerFilterFocus;
 }
 
 [data-rsbs-overlay] {
