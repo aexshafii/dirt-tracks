@@ -2,10 +2,8 @@
 
 import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { SpotsProps } from '../data/schema';
 import React, { useEffect, useState } from 'react';
 import * as turf from '@turf/turf';
-import fetchTracks from './Tracks';
 import { distinctColors } from '../constants/constants';
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 const INITIAL_LNG = 115.092;
@@ -28,7 +26,6 @@ export const MapProvider: React.FC<{
   locations: Array<{ fileName: string; coordinates: [number, number]; name: string }>;
   children: React.ReactNode;
 }> = ({ locations, children }) => {
-  //console.log(locations);
   const mapContainer = React.useRef<HTMLDivElement | null>(null);
   const map = React.useRef<mapboxgl.Map | null>(null);
   const markers = React.useRef<mapboxgl.Marker[]>([]);
@@ -53,63 +50,33 @@ export const MapProvider: React.FC<{
         type: 'vector',
         tiles: ['https://studio.mapbox.com/tilesets/space-waves.clsini8fa195j1tpcsrhudsf4-4g7v2'],
       });
-
-      //   // Additional earthquake layer
-      //   initMap.addSource('earthquakes', {
-      //     type: 'geojson',
-      //     data: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson',
-      //   });
-
-      //   initMap.addLayer({
-      //     id: 'earthquakes-layer',
-      //     type: 'circle',
-      //     source: 'earthquakes',
-      //     paint: {
-      //       'circle-radius': 4,
-      //       'circle-stroke-width': 2,
-      //       'circle-color': 'red',
-      //       'circle-stroke-color': 'white',
-      //     },
-      //   });
     });
-    const fetchData = async () => {
-      const tracksArray = await fetchTracks();
-      const fileNames = tracksArray.geojsonFiles;
-      const coordinates = tracksArray.coordinates;
-      //  console.log('coordinates', coordinates);
-      fileNames.forEach((fileName: string, index: number) => {
-        const colorIndex = index % distinctColors.length;
-        const orderedColor = distinctColors[colorIndex];
-        initMap.on('load', () => {
-          initMap.addSource(`${fileName}`, {
-            type: 'geojson',
-            // Reference the file from your repository
-            data: `tracks/${fileName}`,
-          });
 
-          initMap.addLayer({
-            id: `${fileName}`,
-            type: 'line',
-            source: `${fileName}`,
-            layout: {
-              'line-join': 'round',
-              'line-cap': 'round',
-            },
-            paint: {
-              'line-color': orderedColor,
-              'line-width': 3,
-            },
-          });
+    locations.forEach((location, index) => {
+      const colorIndex = index % distinctColors.length;
+      const orderedColor = distinctColors[colorIndex];
+      initMap.on('load', () => {
+        initMap.addSource(`${location.fileName}`, {
+          type: 'geojson',
+          // Reference the file from your repository
+          data: `tracks/${location.fileName}`,
+        });
+
+        initMap.addLayer({
+          id: `${location.fileName}`,
+          type: 'line',
+          source: `${location.fileName}`,
+          layout: {
+            'line-join': 'round',
+            'line-cap': 'round',
+          },
+          paint: {
+            'line-color': orderedColor,
+            'line-width': 3,
+          },
         });
       });
-
-      // coordinates.forEach((coordinate: any, index: number) => {
-      //   //  console.log(coordinate);
-      //   new mapboxgl.Marker().setLngLat(coordinate).addTo(initMap);
-      // });
-    };
-
-    fetchData();
+    });
 
     //  tilesets from mapbox
     //  Add the url and source layer for any additional tilesets you want to include
@@ -211,62 +178,17 @@ export const MapProvider: React.FC<{
     size: number;
   }
 
-  // React.useEffect(() => {
-  //   const fetchDataSets = async () => {
-  //     const res = await fetch(`/api/datasets`);
-  //     const data = await res.json();
-  //     console.log(data);
-  //     // create an array of dataset ids
-  //     const dataSetIds = data.map((dataset: Dataset) => dataset.id);
-  //     dataSetIds.forEach((datasetId: string) => {
-  //       fetch(`https://api.mapbox.com/datasets/v1/space-waves/${datasetId}/features?access_token=${ACCESS_TOKEN}`)
-  //         .then((res) => res.json())
-  //         .then((data) => {
-  //           console.log(data);
-  //         });
-  //     });
-
-  //     return data;
-  //   };
-  //   fetchDataSets();
-  // }, []);
-
-  // React.useEffect(() => {
-  //   const fetchTilesets = async () => {
-  //     const res = await fetch(`/api/tilesets`);
-  //     const data = await res.json();
-
-  //     console.log(data);
-  //     return data;
-  //   };
-  //   fetchTilesets();
-  // }, []);
-  // React.useEffect(() => {
-  //   const fetchTilesets = async () => {
-  //     fetch(`https://api.mapbox.com/tilesets/v1/sources/space-waves?access_token=${ACCESS_TOKEN}`)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data);
-  //       });
-  //   };
-  //   fetchTilesets();
-  // }, []);
-
   React.useEffect(() => {
     if (!map.current) return;
 
     // Remove old markers
     markers.current.forEach((marker) => marker.remove());
     markers.current = [];
-    // console.log(locations);
     // Add new markers
     for (const location of locations) {
-      // console.log(location);
       const el = document.createElement('div');
       // Tailwind Classname
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
-      // set class of el as marker
-
       el.addEventListener('click', () => {
         map.current?.flyTo({
           center: location.coordinates,
