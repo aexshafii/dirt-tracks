@@ -75,7 +75,7 @@ export const MapProvider: React.FC<{
       el.addEventListener('click', () => {
         map.current?.flyTo({
           center: location.coordinates,
-          zoom: 15,
+          zoom: 10,
         });
         displayTrack(location, locations, map);
       });
