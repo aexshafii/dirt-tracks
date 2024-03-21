@@ -3,6 +3,7 @@ import { types } from '../types/types';
 export type ChipProps = {
   type: (typeof types)[number];
   showBorder?: boolean;
+  onClick?: () => void;
 };
 
 export const Chip = ({ type, showBorder = false }: ChipProps) => {
