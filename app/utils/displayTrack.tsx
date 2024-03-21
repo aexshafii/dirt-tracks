@@ -9,7 +9,6 @@ export default function displayTrack(
     // remove all layers with foreach
     map.current.getStyle().layers?.forEach((layer) => {
       // if any of the layers has an id that maches with any of the locations file name, remove it
-      console.log(locations);
       locations.forEach((location) => {
         if (layer.id === location.fileName) {
           console.log('removing layer', layer.id);
@@ -18,17 +17,8 @@ export default function displayTrack(
         }
       });
     });
-    // map.current.removeSource('some id'); // remove
-    //remove all layers with foreach
-    map.current.getStyle().layers?.forEach((layer) => {
-      if (layer.id === location.fileName) {
-        console.log('removing layer', layer.id);
-        map.current?.removeLayer(layer.id);
-        map.current?.removeSource(layer.id);
-      }
-    });
 
-    //remove all sources with foreach
+    //remove all sources
 
     map.current?.addSource(`${location.fileName}`, {
       type: 'geojson',

@@ -68,15 +68,16 @@ export const MapProvider: React.FC<{
     markers.current = [];
     // Add new markers
     for (const location of locations) {
-      console.log('marker clicked');
       const el = document.createElement('div');
       // Tailwind Classname
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
+      // fly to location on marker click
       el.addEventListener('click', () => {
         map.current?.flyTo({
           center: location.coordinates,
           zoom: 10,
         });
+        // display track on map on marker click
         displayTrack(location, locations, map);
       });
 
