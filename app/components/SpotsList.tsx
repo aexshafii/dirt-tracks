@@ -70,9 +70,9 @@ export const SpotsList = ({
     // Load the location data for the selected spot
 
     // Add the location data to the map
-    displayTrack(location, locations, map);
-
-    console.log('clicked');
+    if (map && map.current) {
+      displayTrack(location, locations, map);
+    }
   };
 
   return (
