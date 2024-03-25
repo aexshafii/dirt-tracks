@@ -3,14 +3,12 @@
 import { SpotProps, SpotsProps } from '../data/schema';
 import { useMapContext } from './Map';
 import { Chip } from './Chip';
-import mapboxgl from 'mapbox-gl';
 import { Inter } from 'next/font/google';
 import { BottomSheetRef } from 'react-spring-bottom-sheet';
 import * as turf from '@turf/turf';
 import React from 'react';
-import fetchTracks from './Tracks';
 import displayTrack from '../utils/displayTrack';
-const inter = Inter({ subsets: ['latin'] });
+import { calculateDistance } from '../utils/calculateDistance';
 
 //Get  name of the spot
 type Feature = {
@@ -22,15 +20,16 @@ type FlyToSpot = {
   type: string;
   coordinates: [number, number];
 };
+const allDistancesArray = [] as any;
 
 export const SpotsList = ({
   locations,
   bottomSheetRef,
 }: {
-  locations: { fileName: string; coordinates: [number, number]; name: string }[];
+  locations: { fileName: string; coordinates: [number, number]; name: string; allCoordinates: any }[];
   bottomSheetRef?: React.RefObject<BottomSheetRef>;
 }) => {
-  const { map, markers, tracks } = useMapContext();
+  const { map, markers } = useMapContext();
 
   const flyToSpot = (location: FlyToSpot) => {
     if (!map?.current) return;
@@ -39,7 +38,16 @@ export const SpotsList = ({
       zoom: 10,
     });
   };
+  locations.map(async (location) => {
+    console.log('location', location.allCoordinates);
+    //console.log('allCoordinates', allCoordinates);
+    const itemDistance = await calculateDistance(location.allCoordinates);
+    console.log('itemDistance', itemDistance);
+    allDistancesArray.push(itemDistance);
+    console.log('all2', allDistancesArray);
+  });
 
+  // display distance under name of the spot
   const togglePopup = (feature: Feature) => {
     if (!map?.current) return;
 
@@ -74,7 +82,7 @@ export const SpotsList = ({
       displayTrack(location, locations, map);
     }
   };
-
+  console.log('all', allDistancesArray);
   return (
     <>
       {locations.map((location: { fileName: string; coordinates: [number, number]; name: string }, i: number) => (
@@ -83,6 +91,7 @@ export const SpotsList = ({
           key={i}
           id={i}
           name={location.name}
+          distance={allDistancesArray[i]}
           // type={feature.properties.type}
           // length={feature.properties.length}
           // area={feature.properties.area}
@@ -96,14 +105,21 @@ interface ExtendedSpotProps extends SpotProps {
   handleClick: () => void;
 }
 
-export const Spot = ({ id, name, handleClick }: ExtendedSpotProps) => {
+interface ExtendedSpotProps extends SpotProps {
+  handleClick: () => void;
+  distance: any; // Replace 'any' with the appropriate type for the 'distance' property
+}
+
+export const Spot = ({ id, name, handleClick, distance }: ExtendedSpotProps) => {
+  console.log('distance', distance);
   return (
     <div
       onClick={handleClick}
       className="cursor-pointer p-3 flex items-center text-sm justify-between self-stretch rounded-md bg-gray-13 shadow-card"
     >
       <div className="tracking-tighter font-[450] text-white ">
-        <div>{name}</div>
+        {name}
+        <div>{distance} km</div>
         {/* <div className="text-gray-10">
           {area} - {length}
         </div> */}
