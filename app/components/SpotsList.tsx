@@ -39,12 +39,8 @@ export const SpotsList = ({
     });
   };
   locations.map(async (location) => {
-    console.log('location', location.allCoordinates);
-    //console.log('allCoordinates', allCoordinates);
     const itemDistance = await calculateDistance(location.allCoordinates);
-    console.log('itemDistance', itemDistance);
     allDistancesArray.push(itemDistance);
-    console.log('all2', allDistancesArray);
   });
 
   // display distance under name of the spot
@@ -82,7 +78,6 @@ export const SpotsList = ({
       displayTrack(location, locations, map);
     }
   };
-  console.log('all', allDistancesArray);
   return (
     <>
       {locations.map((location: { fileName: string; coordinates: [number, number]; name: string }, i: number) => (
@@ -111,7 +106,6 @@ interface ExtendedSpotProps extends SpotProps {
 }
 
 export const Spot = ({ id, name, handleClick, distance }: ExtendedSpotProps) => {
-  console.log('distance', distance);
   return (
     <div
       onClick={handleClick}
