@@ -20,7 +20,6 @@ type FlyToSpot = {
   type: string;
   coordinates: [number, number];
 };
-const allDistancesArray = [] as any;
 
 export const SpotsList = ({
   locations,
@@ -29,8 +28,7 @@ export const SpotsList = ({
   locations: { fileName: string; coordinates: [number, number]; name: string; allCoordinates: any }[];
   bottomSheetRef?: React.RefObject<BottomSheetRef>;
 }) => {
-  const { map, markers } = useMapContext();
-
+  const { map, markers, allDistancesArray, setAllDistancesArray } = useMapContext();
   const flyToSpot = (location: FlyToSpot) => {
     if (!map?.current) return;
     map.current.flyTo({
@@ -38,10 +36,8 @@ export const SpotsList = ({
       zoom: 10,
     });
   };
-  locations.map(async (location) => {
-    const itemDistance = await calculateDistance(location.allCoordinates);
-    allDistancesArray.push(itemDistance);
-  });
+
+  // update the distance array in parent component
 
   // display distance under name of the spot
   const togglePopup = (feature: Feature) => {
@@ -113,7 +109,7 @@ export const Spot = ({ id, name, handleClick, distance }: ExtendedSpotProps) => 
     >
       <div className="tracking-tighter font-[450] text-white ">
         {name}
-        <div>{distance} km</div>
+        <div>Length: {distance} km</div>
         {/* <div className="text-gray-10">
           {area} - {length}
         </div> */}

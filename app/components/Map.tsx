@@ -6,6 +6,8 @@ import React, { useEffect, useState } from 'react';
 import * as turf from '@turf/turf';
 import { distinctColors } from '../constants/constants';
 import displayTrack from '../utils/displayTrack';
+import { set } from 'zod';
+import { calculateDistance } from '../utils/calculateDistance';
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 const INITIAL_LNG = 115.092;
 const INITIAL_LAT = -8.3405;
@@ -18,6 +20,8 @@ interface MapContextValue {
   mapContainer?: React.RefObject<HTMLDivElement>;
   markers?: React.RefObject<mapboxgl.Marker[]>;
   tracks?: React.RefObject<GeoJSONSource | null>;
+  allDistancesArray?: any;
+  setAllDistancesArray?: any;
 }
 
 const MapContext = React.createContext<MapContextValue>({});
@@ -25,7 +29,7 @@ const MapContext = React.createContext<MapContextValue>({});
 export const useMapContext = (): MapContextValue => React.useContext(MapContext);
 
 export const MapProvider: React.FC<{
-  locations: Array<{ fileName: string; coordinates: [number, number]; name: string }>;
+  locations: Array<{ fileName: string; coordinates: [number, number]; name: string; allCoordinates: any }>;
   children: React.ReactNode;
 }> = ({ locations, children }) => {
   const mapContainer = React.useRef<HTMLDivElement | null>(null);
@@ -35,30 +39,21 @@ export const MapProvider: React.FC<{
   const [lng, setLng] = React.useState(INITIAL_LNG);
   const [lat, setLat] = React.useState(INITIAL_LAT);
   const [zoom, setZoom] = React.useState(INITIAL_ZOOM);
+  const [allDistancesArray, setAllDistancesArray] = React.useState<any>([]);
+  // Remove map from the dependencies array
   React.useEffect(() => {
-    if (!mapContainer.current) return;
-    if (map.current) return;
+    if (!mapContainer.current || map.current) return;
     const initMap = new mapboxgl.Map({
       container: mapContainer.current!,
-      style: 'mapbox://styles/space-waves/clsy0mhbw00bp01qo66qu0ol9', // Consider changing to satellite-v9 if needed
+      style: 'mapbox://styles/space-waves/clsy0mhbw00bp01qo66qu0ol9',
       center: [lng, lat],
       zoom: zoom,
     });
 
-    // get geojson data and push to tracks ref
-    const geojson = {
-      type: 'FeatureCollection',
-      features: locations.map((location) => ({
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'Point',
-          coordinates: location.coordinates,
-        },
-      })),
-    };
     map.current = initMap; // Set the ref to the newly created map
-  }, [lat, lng, locations, map, zoom]);
+  }, [lat, lng, locations, zoom]);
+
+  // Use a separate state variable to track whether the distances have been calculated
 
   React.useEffect(() => {
     if (!map.current) return;
@@ -66,36 +61,46 @@ export const MapProvider: React.FC<{
     // Remove old markers
     markers.current.forEach((marker) => marker.remove());
     markers.current = [];
-    // Add new markers
-    for (const location of locations) {
+
+    locations.forEach(async (location, i) => {
       const el = document.createElement('div');
-      // Tailwind Classname
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
-      // fly to location on marker click
+
       el.addEventListener('click', () => {
+        console.log('clicked');
         map.current?.flyTo({
           center: location.coordinates,
           zoom: 10,
         });
-        // display track on map on marker click
         displayTrack(location, locations, map);
       });
 
-      const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: true }).setLngLat(location.coordinates).setHTML(
-        `
-                <div class="name tracking-tighter">${location.name}</div>
-                <div class="text-gray-8 tracking-tighter">
-Starting Point
-                </div>
-        `
-      );
+      const itemDistance = await calculateDistance(location.allCoordinates);
+      setAllDistancesArray((prev: any) => {
+        const updatedDistances = [...prev, itemDistance];
 
-      const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
-        .setLngLat(location.coordinates)
-        .setPopup(popup)
-        .addTo(map.current);
-      markers.current.push(marker);
-    }
+        const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: true }).setLngLat(location.coordinates).setHTML(
+          `
+              <div class="name tracking-tighter">${location.name}</div>
+              <div class="text-gray-8 tracking-tighter">
+                Starting Point
+              </div>
+              <div class="text-gray-8 tracking-tighter">
+             Length:   ${updatedDistances[i]} km
+              </div>
+            `
+        );
+        if (!map.current) return;
+        const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
+          .setLngLat(location.coordinates)
+          .setPopup(popup)
+          .addTo(map.current);
+
+        markers.current.push(marker);
+
+        return updatedDistances;
+      });
+    });
   }, [locations]);
 
   React.useEffect(() => {
@@ -107,7 +112,11 @@ Starting Point
     });
   });
 
-  return <MapContext.Provider value={{ map, mapContainer, markers, tracks }}>{children}</MapContext.Provider>;
+  return (
+    <MapContext.Provider value={{ map, mapContainer, markers, tracks, allDistancesArray }}>
+      {children}
+    </MapContext.Provider>
+  );
 };
 
 export const Map = () => {

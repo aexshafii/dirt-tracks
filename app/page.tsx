@@ -10,6 +10,7 @@ type Coordinate = [number, number];
 export default async function Home() {
   //console.log('tracksData', tracksData);
   const tracksData = await getTrailsData();
+
   // console.log('data', tracksData);
   return (
     <MapProvider locations={tracksData}>
