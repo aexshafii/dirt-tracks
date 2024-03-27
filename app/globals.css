@@ -253,3 +253,8 @@ body {
   /* Allows interactions on the rest of the page before the close transition is finished */
   pointer-events: none;
 }
+
+/* // set scrollbar color to transparent transparent */
+::-webkit-scrollbar {
+  width: 0px;
+}

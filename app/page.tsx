@@ -15,10 +15,10 @@ export default async function Home() {
   return (
     <MapProvider locations={tracksData}>
       <div className="flex h-full">
-        <div className="absolute py-8 px-6 sm:px-9 sm:py-9 z-20 drop-shadow-xl">{/* <Logo /> */}</div>
-        <div className="hidden sm:block fade max-w-sm p-9 w-full h-screen max-h-screen z-10 overflow-scroll -scale-x-100">
+        <div className="absolute py-8 px-6 sm:px-9 sm:py-9 z-20 drop-shadow-xl  ">{/* <Logo /> */}</div>
+        <div className="hidden sm:block fade max-w-sm p-9 w-full h-screen max-h-screen z-10 overflow-scroll  -scale-x-100">
           <div className="flex gap-9 flex-col -scale-x-100">
-            <div className="flex flex-col gap-3 h-full z-10 pt-16 pb-8">{<SpotsList locations={tracksData} />}</div>
+            <div className="flex flex-col gap-3 h-full z-10 pt-16 pb-8 ">{<SpotsList locations={tracksData} />}</div>
           </div>
         </div>
 
