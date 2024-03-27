@@ -2,11 +2,8 @@
 
 import mapboxgl, { GeoJSONSource } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import React, { useEffect, useState } from 'react';
-import * as turf from '@turf/turf';
-import { distinctColors } from '../constants/constants';
+import React from 'react';
 import displayTrack from '../utils/displayTrack';
-import { set } from 'zod';
 import { calculateDistance } from '../utils/calculateDistance';
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 const INITIAL_LNG = 115.092;
@@ -74,7 +71,7 @@ export const MapProvider: React.FC<{
         });
         displayTrack(location, locations, map);
       });
-
+      // calculate the distance for each location
       const itemDistance = await calculateDistance(location.allCoordinates);
       setAllDistancesArray((prev: any) => {
         const updatedDistances = [...prev, itemDistance];
