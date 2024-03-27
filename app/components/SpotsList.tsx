@@ -3,12 +3,9 @@
 import { SpotProps, SpotsProps } from '../data/schema';
 import { useMapContext } from './Map';
 import { Chip } from './Chip';
-import { Inter } from 'next/font/google';
 import { BottomSheetRef } from 'react-spring-bottom-sheet';
-import * as turf from '@turf/turf';
 import React from 'react';
 import displayTrack from '../utils/displayTrack';
-import { calculateDistance } from '../utils/calculateDistance';
 
 //Get  name of the spot
 type Feature = {
