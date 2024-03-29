@@ -64,7 +64,6 @@ export const MapProvider: React.FC<{
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
 
       el.addEventListener('click', () => {
-        console.log('clicked');
         map.current?.flyTo({
           center: location.coordinates,
           zoom: 10,
@@ -85,8 +84,10 @@ export const MapProvider: React.FC<{
               <div class="text-gray-8 tracking-tighter">
              Length:   ${updatedDistances[i]} km
               </div>
+              <button class="text-gray-8 tracking-tighter">Download</button>
             `
         );
+
         if (!map.current) return;
         const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
           .setLngLat(location.coordinates)
@@ -95,6 +96,27 @@ export const MapProvider: React.FC<{
 
         markers.current.push(marker);
 
+        // on download button click, dowlnoad the file
+        // select button
+        popup.on('open', function () {
+          const buttons = document.querySelectorAll('button');
+
+          console.log('open');
+          buttons.forEach((button) => {
+            button.addEventListener('click', async () => {
+              console.log('clicked');
+              const fileName = location.fileName.split('.')[0];
+              const res = await fetch(`/api/downloadFile?fileName=${fileName}`);
+              const data = await res.json();
+              const element = document.createElement('a');
+              const file = new Blob([data], { type: 'text/plain' });
+              element.href = URL.createObjectURL(file);
+              element.download = `${fileName}.gpx`;
+              document.body.appendChild(element); // Required for this to work in FireFox
+              element.click();
+            });
+          });
+        });
         return updatedDistances;
       });
     });
