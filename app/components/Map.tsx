@@ -107,9 +107,15 @@ export const MapProvider: React.FC<{
               console.log('clicked');
               const fileName = location.fileName.split('.')[0];
               const res = await fetch(`/api/downloadFile?fileName=${fileName}`);
+              console.log(res.body);
               const data = await res.json();
+              console.log(data);
+              if (!data.data) {
+                alert(data.error);
+                return;
+              }
               const element = document.createElement('a');
-              const file = new Blob([data], { type: 'application/gpx+xml' });
+              const file = new Blob([data.data], { type: 'application/gpx+xml' });
               element.href = URL.createObjectURL(file);
               element.download = `${fileName}.gpx`;
               document.body.appendChild(element); // Required for this to work in FireFox
