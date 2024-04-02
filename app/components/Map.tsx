@@ -58,88 +58,49 @@ export const MapProvider: React.FC<{
   // Use a separate state variable to track whether the distances have been calculated
 
   React.useEffect(() => {
-    if (!map.current) return;
+    const calculateAllDistances = async () => {
+      const distances = [];
+      for (const location of locations) {
+        const distance = await calculateDistance(location.allCoordinates);
+        distances.push(distance);
+      }
+      return distances;
+    };
 
-    // Remove old markers
-    markers.current.forEach((marker) => marker.remove());
-    markers.current = [];
+    calculateAllDistances().then((distances) => {
+      setAllDistancesArray(distances);
 
-    locations.forEach(async (location, i) => {
-      const el = document.createElement('div');
+      locations.forEach((location, i) => {
+        const el = document.createElement('div');
+        el.className = 'h-[32px] w-[22px] marker drop-shadow-lg';
 
-      el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
-
-      el.addEventListener('click', () => {
-        map.current?.flyTo({
-          center: location.coordinates,
-          zoom: 10,
-        });
-        displayTrack(location, locations, map);
-        // set the selected spot to the index of the location
-        // outline the selected spot chip
-        if (!setSelectedSpot) return;
-        setSelectedSpot(i);
-        // select all the divs with the class name of shadow-card
-        const cards = document.querySelectorAll('.shadow-card');
-        if (!cards[i]) return;
-        console.log('card', cards[i]);
-        //scroll to the selected spot
-        cards[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-      });
-      // calculate the distance for each location
-      const itemDistance = await calculateDistance(location.allCoordinates);
-      setAllDistancesArray((prev: any) => {
-        const updatedDistances = [...prev, itemDistance];
-
-        const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: true }).setLngLat(location.coordinates).setHTML(
-          `
-              <div class="name tracking-tighter">${location.name}</div>
-              <div class="text-gray-8 tracking-tighter">
-                Starting Point
-              </div>
-              <div class="text-gray-8 tracking-tighter">
-             Length:   ${updatedDistances[i]} km
-              </div>
-              <button class="text-gray-8 tracking-tighter">Download</button>
-            `
-        );
-
-        if (!map.current) return;
-        const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
-          .setLngLat(location.coordinates)
-          .setPopup(popup)
-          .addTo(map.current);
-
-        markers.current.push(marker);
-
-        // on download button click, dowlnoad the file
-        // select button
-        popup.on('open', function () {
-          const buttons = document.querySelectorAll('button');
-
-          console.log('open');
-          buttons.forEach((button) => {
-            button.addEventListener('click', async () => {
-              console.log('clicked');
-              const fileName = location.fileName.split('.')[0];
-              const res = await fetch(`/api/downloadFile?fileName=${fileName}`);
-              console.log(res.body);
-              const data = await res.json();
-              console.log(data);
-              if (!data.data) {
-                alert(data.error);
-                return;
-              }
-              const element = document.createElement('a');
-              const file = new Blob([data.data], { type: 'application/gpx+xml' });
-              element.href = URL.createObjectURL(file);
-              element.download = `${fileName}.gpx`;
-              document.body.appendChild(element); // Required for this to work in FireFox
-              element.click();
-            });
+        el.addEventListener('click', () => {
+          map.current?.flyTo({
+            center: location.coordinates,
+            zoom: 10,
           });
+          displayTrack(location, locations, map);
+          setSelectedSpot(i);
+
+          const cards = document.querySelectorAll('.shadow-card');
+          cards[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
-        return updatedDistances;
+
+        const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: true }).setLngLat(location.coordinates).setHTML(`
+            <div class="name tracking-tighter">${location.name}</div>
+            <div class="text-gray-8 tracking-tighter pt-1">Start</div>
+          `);
+        //   <div class="text-gray-8 tracking-tighter font-sm">Length: ${distances[i]} km</div>
+
+        if (map.current) {
+          const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
+            .setLngLat(location.coordinates)
+            .setPopup(popup)
+            .addTo(map.current);
+
+          markers.current = markers.current.filter((m) => m !== marker);
+          markers.current.push(marker);
+        }
       });
     });
   }, [locations]);

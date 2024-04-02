@@ -91,7 +91,6 @@ body {
 .mapboxgl-popup-content {
   @apply !font-sans !shadow-card !p-3 !rounded-md;
   font-weight: 450;
-  font-size: 14px;
   padding-right: 48px !important;
   /* // set to bg-gray-13 from tailwind config */
   background-color: rgb(39, 39, 42) !important;

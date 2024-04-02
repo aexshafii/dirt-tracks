@@ -8,7 +8,7 @@ See for yourself: https://dirt-tracks.vercel.app/
 ## Features
 
 - Interactive map of Bali highlighting off-road motorbike tracks.
-- Basic information about 10 tracks, including length, area, starting point
+- Basic information about 10 tracks, including length, area, start point
 
 ## Getting Started
 
