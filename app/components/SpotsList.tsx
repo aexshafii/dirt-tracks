@@ -23,7 +23,7 @@ export const SpotsList = ({
   locations,
   bottomSheetRef,
 }: {
-  locations: { fileName: string; coordinates: [number, number]; name: string; allCoordinates: any }[];
+  locations: { fileName: string; coordinates: [number, number]; name: string }[];
   bottomSheetRef?: React.RefObject<BottomSheetRef>;
 }) => {
   const { map, markers, allDistancesArray, selectedSpot, setSelectedSpot } = useMapContext();
@@ -112,10 +112,11 @@ interface ExtendedSpotProps extends SpotProps {
   handleClick: () => void;
   distance: any; // Replace 'any' with the appropriate type for the 'distance' property
   selected: boolean;
-  location: { fileName: string; coordinates: [number, number]; name: string; allCoordinates: any };
+  location: { fileName: string; coordinates: [number, number]; name: string };
 }
 
 export const Spot = ({ id, name, handleClick, distance, selected, location }: ExtendedSpotProps) => {
+  console.log(location);
   // make the border two colors
   const selectedStyle = selected ? { borderColor: 'hsl(267, 80%, 53%)', borderWidth: 2 } : {};
   // Inside your component
