@@ -112,7 +112,7 @@ const Drawer = ({ children, sheetRef }: DrawerProps) => {
             style={{ opacity: opacity }}
             className="shine transition-opacity duration-500 rounded-full p-1.5 w-fit flex justify-center items-center text-sm tracking-tighter font-[450] py-1 px-2 text-gray-11"
           >
-            Discover your next favourite off road tracks
+            Discover tracks
           </div>
         </div>
       }
