@@ -158,7 +158,10 @@ export const Spot = ({ id, name, handleClick, distance, selected, location }: Ex
       </div>
       <button
         disabled={isDownloading}
-        onClick={() => handleDownload(location.fileName.split('.')[0])}
+        onClick={(event) => {
+          event.stopPropagation();
+          handleDownload(location.fileName.split('.')[0]);
+        }}
         className="download border-none my-2 "
       >
         <svg
