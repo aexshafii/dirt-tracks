@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import React from 'react';
 import displayTrack from '../utils/displayTrack';
 import { calculateDistance } from '../utils/calculateDistance';
+
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 const INITIAL_LNG = 115.092;
 const INITIAL_LAT = -8.3405;
@@ -19,6 +20,8 @@ interface MapContextValue {
   tracks?: React.RefObject<GeoJSONSource | null>;
   allDistancesArray?: any;
   setAllDistancesArray?: any;
+  selectedSpot?: any;
+  setSelectedSpot?: any;
 }
 
 const MapContext = React.createContext<MapContextValue>({});
@@ -37,6 +40,8 @@ export const MapProvider: React.FC<{
   const [lat, setLat] = React.useState(INITIAL_LAT);
   const [zoom, setZoom] = React.useState(INITIAL_ZOOM);
   const [allDistancesArray, setAllDistancesArray] = React.useState<any>([]);
+  const [selectedSpot, setSelectedSpot] = React.useState<any>([]);
+
   // Remove map from the dependencies array
   React.useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -53,49 +58,49 @@ export const MapProvider: React.FC<{
   // Use a separate state variable to track whether the distances have been calculated
 
   React.useEffect(() => {
-    if (!map.current) return;
+    const calculateAllDistances = async () => {
+      const distances = [];
+      for (const location of locations) {
+        const distance = await calculateDistance(location.allCoordinates);
+        distances.push(distance);
+      }
+      return distances;
+    };
 
-    // Remove old markers
-    markers.current.forEach((marker) => marker.remove());
-    markers.current = [];
+    calculateAllDistances().then((distances) => {
+      setAllDistancesArray(distances);
 
-    locations.forEach(async (location, i) => {
-      const el = document.createElement('div');
-      el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
+      locations.forEach((location, i) => {
+        const el = document.createElement('div');
+        el.className = 'h-[32px] w-[22px] marker drop-shadow-lg';
 
-      el.addEventListener('click', () => {
-        console.log('clicked');
-        map.current?.flyTo({
-          center: location.coordinates,
-          zoom: 10,
+        el.addEventListener('click', () => {
+          map.current?.flyTo({
+            center: location.coordinates,
+            zoom: 10,
+          });
+          displayTrack(location, locations, map);
+          setSelectedSpot(i);
+
+          const cards = document.querySelectorAll('.shadow-card');
+          cards[i]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
         });
-        displayTrack(location, locations, map);
-      });
-      // calculate the distance for each location
-      const itemDistance = await calculateDistance(location.allCoordinates);
-      setAllDistancesArray((prev: any) => {
-        const updatedDistances = [...prev, itemDistance];
 
-        const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: true }).setLngLat(location.coordinates).setHTML(
-          `
-              <div class="name tracking-tighter">${location.name}</div>
-              <div class="text-gray-8 tracking-tighter">
-                Starting Point
-              </div>
-              <div class="text-gray-8 tracking-tighter">
-             Length:   ${updatedDistances[i]} km
-              </div>
-            `
-        );
-        if (!map.current) return;
-        const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
-          .setLngLat(location.coordinates)
-          .setPopup(popup)
-          .addTo(map.current);
+        const popup = new mapboxgl.Popup({ offset: 16, closeOnClick: true }).setLngLat(location.coordinates).setHTML(`
+            <div class="name tracking-tighter">${location.name}</div>
+            <div class="text-gray-8 tracking-tighter pt-1">Start</div>
+          `);
+        //   <div class="text-gray-8 tracking-tighter font-sm">Length: ${distances[i]} km</div>
 
-        markers.current.push(marker);
+        if (map.current) {
+          const marker = new mapboxgl.Marker({ element: el, offset: [0, 0] })
+            .setLngLat(location.coordinates)
+            .setPopup(popup)
+            .addTo(map.current);
 
-        return updatedDistances;
+          markers.current = markers.current.filter((m) => m !== marker);
+          markers.current.push(marker);
+        }
       });
     });
   }, [locations]);
@@ -110,7 +115,9 @@ export const MapProvider: React.FC<{
   });
 
   return (
-    <MapContext.Provider value={{ map, mapContainer, markers, tracks, allDistancesArray }}>
+    <MapContext.Provider
+      value={{ map, mapContainer, markers, tracks, allDistancesArray, selectedSpot, setSelectedSpot }}
+    >
       {children}
     </MapContext.Provider>
   );

@@ -67,10 +67,7 @@ export const MobileDrawer = ({
           {showFilter && (
             <div>
               <div className="px-3 tracking-tighter font-[500]">Filters</div>
-              <div className="flex items-center justify-evenly">
-                <PostcodeWheel mobile />
-                <VenueFilters mobile />
-              </div>
+              <div className="flex items-center justify-evenly"></div>
               <div className="mt-8 px-3 tracking-tighter font-[500]">Spots</div>
             </div>
           )}

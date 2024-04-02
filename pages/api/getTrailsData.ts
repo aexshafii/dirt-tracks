@@ -23,7 +23,6 @@ export async function getTrailsData() {
     const name = geojson.features[0].properties.name;
     const coordinate = geojson.features[0].geometry.coordinates[0].slice(0, 2);
     const itemCoordinates = geojson.features[0].geometry.coordinates;
-    console.log('itemCoordinates', itemCoordinates.length);
     const slicedCoordinates = itemCoordinates.map((item: any) => {
       // if (item.length > 3) {
       //   console.log('higher than 2 ');
