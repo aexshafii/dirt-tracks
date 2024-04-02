@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import React from 'react';
 import displayTrack from '../utils/displayTrack';
 import { calculateDistance } from '../utils/calculateDistance';
+
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN as string;
 const INITIAL_LNG = 115.092;
 const INITIAL_LAT = -8.3405;
@@ -19,6 +20,8 @@ interface MapContextValue {
   tracks?: React.RefObject<GeoJSONSource | null>;
   allDistancesArray?: any;
   setAllDistancesArray?: any;
+  selectedSpot?: any;
+  setSelectedSpot?: any;
 }
 
 const MapContext = React.createContext<MapContextValue>({});
@@ -37,6 +40,8 @@ export const MapProvider: React.FC<{
   const [lat, setLat] = React.useState(INITIAL_LAT);
   const [zoom, setZoom] = React.useState(INITIAL_ZOOM);
   const [allDistancesArray, setAllDistancesArray] = React.useState<any>([]);
+  const [selectedSpot, setSelectedSpot] = React.useState<any>([]);
+
   // Remove map from the dependencies array
   React.useEffect(() => {
     if (!mapContainer.current || map.current) return;
@@ -61,6 +66,7 @@ export const MapProvider: React.FC<{
 
     locations.forEach(async (location, i) => {
       const el = document.createElement('div');
+
       el.className = `h-[32px] w-[22px] marker drop-shadow-lg`;
 
       el.addEventListener('click', () => {
@@ -69,6 +75,14 @@ export const MapProvider: React.FC<{
           zoom: 10,
         });
         displayTrack(location, locations, map);
+        // set the selected spot to the index of the location
+        // outline the selected spot chip
+        setSelectedSpot(i);
+        // select all the divs with the class name of shadow-card
+        const cards = document.querySelectorAll('.shadow-card');
+        console.log('card', cards[i]);
+        //scroll to the selected spot
+        cards[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
       // calculate the distance for each location
       const itemDistance = await calculateDistance(location.allCoordinates);
@@ -138,7 +152,9 @@ export const MapProvider: React.FC<{
   });
 
   return (
-    <MapContext.Provider value={{ map, mapContainer, markers, tracks, allDistancesArray }}>
+    <MapContext.Provider
+      value={{ map, mapContainer, markers, tracks, allDistancesArray, selectedSpot, setSelectedSpot }}
+    >
       {children}
     </MapContext.Provider>
   );

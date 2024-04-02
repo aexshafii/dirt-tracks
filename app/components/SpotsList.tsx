@@ -6,6 +6,7 @@ import { Chip } from './Chip';
 import { BottomSheetRef } from 'react-spring-bottom-sheet';
 import React from 'react';
 import displayTrack from '../utils/displayTrack';
+import { useState } from 'react';
 
 //Get  name of the spot
 type Feature = {
@@ -25,7 +26,8 @@ export const SpotsList = ({
   locations: { fileName: string; coordinates: [number, number]; name: string; allCoordinates: any }[];
   bottomSheetRef?: React.RefObject<BottomSheetRef>;
 }) => {
-  const { map, markers, allDistancesArray, setAllDistancesArray } = useMapContext();
+  const { map, markers, allDistancesArray, selectedSpot, setSelectedSpot } = useMapContext();
+
   const flyToSpot = (location: FlyToSpot) => {
     if (!map?.current) return;
     map.current.flyTo({
@@ -54,7 +56,16 @@ export const SpotsList = ({
     }
   };
 
-  const handleClick = async (location: { fileName: string; coordinates: [number, number]; name: string }) => {
+  const handleClick = async (
+    location: {
+      fileName: string;
+      coordinates: [number, number];
+      name: string;
+    },
+    i: number
+  ) => {
+    setSelectedSpot(i);
+
     if (bottomSheetRef?.current) {
       bottomSheetRef.current.snapTo(({ headerHeight }) => headerHeight);
     }
@@ -75,11 +86,12 @@ export const SpotsList = ({
     <>
       {locations.map((location: { fileName: string; coordinates: [number, number]; name: string }, i: number) => (
         <Spot
-          handleClick={() => handleClick(location)}
+          handleClick={() => handleClick(location, i)}
           key={i}
           id={i}
           name={location.name}
           distance={allDistancesArray[i]}
+          selected={i === selectedSpot}
           // type={feature.properties.type}
           // length={feature.properties.length}
           // area={feature.properties.area}
@@ -96,11 +108,15 @@ interface ExtendedSpotProps extends SpotProps {
 interface ExtendedSpotProps extends SpotProps {
   handleClick: () => void;
   distance: any; // Replace 'any' with the appropriate type for the 'distance' property
+  selected: boolean;
 }
 
-export const Spot = ({ id, name, handleClick, distance }: ExtendedSpotProps) => {
+export const Spot = ({ id, name, handleClick, distance, selected }: ExtendedSpotProps) => {
+  const selectedStyle = selected ? { borderColor: 'blue', borderWidth: 10 } : {};
+  console.log(selectedStyle);
   return (
     <div
+      style={selectedStyle}
       onClick={handleClick}
       className="cursor-pointer p-3 flex items-center text-sm justify-between self-stretch rounded-md bg-gray-13 shadow-card"
     >
