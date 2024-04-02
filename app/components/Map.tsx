@@ -77,9 +77,11 @@ export const MapProvider: React.FC<{
         displayTrack(location, locations, map);
         // set the selected spot to the index of the location
         // outline the selected spot chip
+        if (!setSelectedSpot) return;
         setSelectedSpot(i);
         // select all the divs with the class name of shadow-card
         const cards = document.querySelectorAll('.shadow-card');
+        if (!cards[i]) return;
         console.log('card', cards[i]);
         //scroll to the selected spot
         cards[i].scrollIntoView({ behavior: 'smooth', block: 'center' });

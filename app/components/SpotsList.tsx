@@ -69,6 +69,7 @@ export const SpotsList = ({
     if (bottomSheetRef?.current) {
       bottomSheetRef.current.snapTo(({ headerHeight }) => headerHeight);
     }
+
     flyToSpot({
       type: 'Point',
       coordinates: location.coordinates,
@@ -112,15 +113,16 @@ interface ExtendedSpotProps extends SpotProps {
 }
 
 export const Spot = ({ id, name, handleClick, distance, selected }: ExtendedSpotProps) => {
-  const selectedStyle = selected ? { borderColor: 'blue', borderWidth: 10 } : {};
-  console.log(selectedStyle);
+  // make the border two colors
+  const selectedStyle = selected ? { borderColor: 'hsl(267, 80%, 53%)', borderWidth: 2 } : {};
+
   return (
     <div
       style={selectedStyle}
       onClick={handleClick}
       className="cursor-pointer p-3 flex items-center text-sm justify-between self-stretch rounded-md bg-gray-13 shadow-card"
     >
-      <div className="tracking-tighter font-[450] text-white ">
+      <div className="tracking-tighter font-[450] text-white  ">
         {name}
         <div>Length: {distance} km</div>
         {/* <div className="text-gray-10">
