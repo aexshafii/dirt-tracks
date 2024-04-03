@@ -110,7 +110,7 @@ const Drawer = ({ children, sheetRef }: DrawerProps) => {
         <div className="flex items-center w-full justify-center my-4">
           <div
             style={{ opacity: opacity }}
-            className="shine transition-opacity duration-500 rounded-full p-1.5 w-fit flex justify-center items-center text-sm tracking-tighter font-[450] py-1 px-2 text-gray-11"
+            className="shine transition-opacity duration-500 rounded-full p-1.5 w-fit flex justify-center items-center text-sm tracking-tighter font-[450] py-1 px-2 text-gray-8"
           >
             Discover tracks
           </div>

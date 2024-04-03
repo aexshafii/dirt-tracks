@@ -7,7 +7,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --rsbs-backdrop-bg: rgba(0, 0, 0, 0.7);
-  --rsbs-bg: rgba(255, 255, 255, 0.7);
+  --rsbs-bg: rgba(158, 158, 158, 0.206);
   --rsbs-handle-bg: hsla(0, 0%, 0%, 0.5);
   --rsbs-max-w: auto;
   --rsbs-ml: env(safe-area-inset-left);
@@ -117,7 +117,7 @@ body {
 [data-rsbs-overlay] {
   border-top-left-radius: var(--rsbs-overlay-rounded);
   border-top-right-radius: var(--rsbs-overlay-rounded);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(14, 0, 0, 0);
   display: flex;
   background: var(--rsbs-bg);
   backdrop-filter: blur(3px);
